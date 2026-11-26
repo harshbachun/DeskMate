@@ -133,6 +133,7 @@ W.valorant = {
       return !failed;
     };
     const poll = every(1000, load, 3000);
+    window.addEventListener('vl-demo', load); // the design preview switching demo states
 
     // ---- Save clip: one press per tap; a retried request carries the same tap id ------------------------------------
     let clipBusy = false, clipTimer = null;
@@ -306,7 +307,7 @@ W.valorant = {
     render();
     return {
       update(kind) { if (kind === 'tick') poll(); renderMatch(); },
-      destroy() { talkUp(); seen.disconnect(); document.removeEventListener('visibilitychange', onHide); window.removeEventListener('blur', talkUp); },
+      destroy() { talkUp(); seen.disconnect(); document.removeEventListener('visibilitychange', onHide); window.removeEventListener('blur', talkUp); window.removeEventListener('vl-demo', load); },
     };
   },
 };

@@ -1404,34 +1404,36 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
   --vl-word-h: 10px;        /* VALORANT wordmark height */
   --vl-tile: 87px;          /* the square behind the V mark */
   --vl-tile-x: 0px;         /* moves the square right (or left, negative) */
+  --vl-tile-tint: 0.82;     /* over the map: how opaque the square's #0e1822 is */
+  --vl-tile-blur: 0px;      /* over the map: blur of the map behind the square */
   --vl-mark-h: 45px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
   /* not running: its own sizes */
-  --vl-off-tile: 69px;      /* the V square */
-  --vl-off-tile-x: 0px;     /* moves it sideways */
-  --vl-off-mark-h: 36px;    /* the V inside it */
-  --vl-off-word-h: 10px;    /* VALORANT wordmark */
+  --vl-off-tile: 61px;      /* the V square */
+  --vl-off-tile-x: -29px;     /* moves it sideways */
+  --vl-off-mark-h: 31px;    /* the V inside it */
+  --vl-off-word-h: 22px;    /* VALORANT wordmark */
   --vl-off-text: 15px;      /* "Not running" */
-  --vl-off-gap: 12px;       /* space between the square, the wordmark and the text */
-  --vl-off-pad: 14px;       /* inner left/right padding */
+  --vl-off-gap: 13px;       /* space between the square, the wordmark and the text */
+  --vl-off-pad: 40px;       /* inner left/right padding */
   /* in lobby (running, no map yet): its own sizes */
   --vl-lobby-h: 130px;      /* card height */
-  --vl-lobby-tile: 87px; --vl-lobby-tile-x: 0px; --vl-lobby-mark-h: 45px;
+  --vl-lobby-tile: 87px; --vl-lobby-tile-x: 4px; --vl-lobby-mark-h: 45px;
   --vl-lobby-word-h: 10px; --vl-lobby-m1: 20px; --vl-lobby-m2: 15px;
-  --vl-lobby-gap: 12px;     /* space between the square and the text */
+  --vl-lobby-gap: 21px;     /* space between the square and the text */
 }
 .vl-box { --vl-top-cur: var(--vl-top-h); }
 .vl-box.vl-off { --vl-top-cur: var(--vl-top-off-h); }
 .vl-box.vl-lobby { --vl-top-cur: var(--vl-lobby-h); }
 .vl-match { position: relative; overflow: hidden; flex: none; height: var(--vl-top-cur); display: flex; align-items: center; gap: 12px;
   padding: 10px 16px; border-radius: 14px; background: #0e1822; border: 1px solid var(--vl-line); text-align: left; }
-.vl-match.live { border-color: rgba(255, 70, 85, .55); }
+.vl-match.live { border: 2px solid var(--vl-red); }
 .vl-map-bg { position: absolute; top: 0; bottom: 0; left: 0; width: var(--vl-map-w); background: no-repeat var(--vl-map-x) var(--vl-map-y) / cover; filter: brightness(var(--vl-map-bright)); }
 .vl-shade { position: absolute; inset: 0; background: linear-gradient(to left, #0e1822 var(--vl-grad-solid), rgba(14, 24, 34, 0) var(--vl-grad-clear)); }
 .vl-match:not(.has-map) .vl-map-bg, .vl-match:not(.has-map) .vl-shade { display: none; }
 .vl-tile { position: relative; flex: none; width: var(--vl-tile); height: var(--vl-tile); border-radius: 10px; background: var(--vl-panel-2);
   display: grid; place-items: center; color: var(--vl-red); margin-left: var(--vl-tile-x); }
-.vl-match.has-map .vl-tile { background: rgba(14, 24, 34, .82); }
+.vl-match.has-map .vl-tile { background: rgba(14, 24, 34, var(--vl-tile-tint)); -webkit-backdrop-filter: blur(var(--vl-tile-blur)); backdrop-filter: blur(var(--vl-tile-blur)); }
 .vl-mark { display: inline-flex; }
 .vl-mark svg { height: min(var(--vl-mark-h), calc(var(--vl-tile) - 8px)); width: auto; display: block; }
 .vl-mtext { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
