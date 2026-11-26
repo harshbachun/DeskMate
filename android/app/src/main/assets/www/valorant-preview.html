@@ -28,6 +28,7 @@
   pre { margin: 0; background: #0b0f14; border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow: auto; font-size: 12px; }
   .row { display: flex; gap: 8px; margin-top: 8px; }
   .hint { color: var(--muted); margin: 0; }
+  h3.group { font-size: 12px; color: var(--ink); margin: 14px 0 4px; } h3.group:first-child { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -82,7 +83,6 @@
 // Each slider is one CSS variable from style.css (the defaults there are the release values).
 const VARS = [
   ['--vl-top-h', 'Card height (running)', 60, 240, 1, 'px', 130],
-  ['--vl-top-off-h', 'Card height (not running)', 32, 120, 1, 'px', 85],
   ['--vl-peek', 'Stats peek below buttons', 0, 60, 1, 'px', 16],
   ['--vl-btn-min', 'Buttons min height', 60, 260, 1, 'px', 120],
   ['--vl-grad-solid', 'Gradient solid to', 0, 100, 1, '%', 41],
@@ -97,6 +97,14 @@ const VARS = [
   ['--vl-mark-h', 'V mark height', 10, 80, 1, 'px', 45],
   ['--vl-m1-size', 'Line 1 text size', 10, 32, 1, 'px', 20],
   ['--vl-m2-size', 'Line 2 text size', 9, 26, 1, 'px', 15],
+  // not running (moving one of these shows the not-running state)
+  ['--vl-top-off-h', 'Card height', 32, 140, 1, 'px', 85, 'off'],
+  ['--vl-off-tile', 'V square size', 20, 140, 1, 'px', 69, 'off'],
+  ['--vl-off-mark-h', 'V mark height', 8, 100, 1, 'px', 36, 'off'],
+  ['--vl-off-word-h', 'Wordmark height', 6, 30, 1, 'px', 10, 'off'],
+  ['--vl-off-text', '"Not running" size', 9, 30, 1, 'px', 15, 'off'],
+  ['--vl-off-gap', 'Spacing', 0, 40, 1, 'px', 12, 'off'],
+  ['--vl-off-pad', 'Side padding', 0, 40, 1, 'px', 14, 'off'],
 ];
 const MAPS = ['Abyss', 'Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset'];
 const KEY = 'deskmate.vlPreview';
@@ -139,14 +147,21 @@ const apply = () => {
   if (root) for (const v of VARS) root.style.setProperty(v[0], css(v));
   $('out').textContent = ':root {\n' + VARS.map((v) => `  ${v[0]}: ${css(v)};`).join('\n') + '\n}';
 };
-$('sliders').append(...VARS.map((v) => {
+$('sliders').append(...VARS.flatMap((v, i) => {
+  const head = (text) => { const h = document.createElement('h3'); h.className = 'group'; h.textContent = text; return h; };
+  const before = i === 0 ? [head('While VALORANT runs')] : v[7] === 'off' && VARS[i - 1][7] !== 'off' ? [head('Not running')] : [];
   const row = document.createElement('div'); row.className = 'slider';
   row.innerHTML = `<span>${v[1]}</span><input type="range" min="${v[2]}" max="${v[3]}" step="${v[4]}"><output></output>`;
   const r = row.querySelector('input'), o = row.querySelector('output');
   const show = () => { r.value = cur(v); o.textContent = css(v); };
-  r.addEventListener('input', () => { st.vals[v[0]] = +r.value; save(); o.textContent = css(v); apply(); });
+  r.addEventListener('input', () => {
+    st.vals[v[0]] = +r.value; save(); o.textContent = css(v); apply();
+    // tuning the not-running card shows it; tuning the running card leaves "not running"
+    const want = v[7] === 'off' ? 'off' : st.state === 'off' ? 'ingame' : null;
+    if (want && st.state !== want) { st.state = want; save(); showState(); }
+  });
   show(); row._show = show;
-  return row;
+  return [...before, row];
 }));
 $('reset').addEventListener('click', () => { st.vals = {}; save(); document.querySelectorAll('.slider').forEach((r) => r._show()); apply(); });
 $('copy').addEventListener('click', () => navigator.clipboard?.writeText($('out').textContent));

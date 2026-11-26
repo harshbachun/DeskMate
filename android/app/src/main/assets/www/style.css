@@ -1405,6 +1405,13 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
   --vl-tile: 87px;          /* the square behind the V mark */
   --vl-mark-h: 45px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
+  /* not running: its own sizes */
+  --vl-off-tile: 69px;      /* the V square */
+  --vl-off-mark-h: 36px;    /* the V inside it */
+  --vl-off-word-h: 10px;    /* VALORANT wordmark */
+  --vl-off-text: 15px;      /* "Not running" */
+  --vl-off-gap: 12px;       /* space between the square, the wordmark and the text */
+  --vl-off-pad: 14px;       /* inner left/right padding */
 }
 .vl-box { --vl-top-cur: var(--vl-top-h); }
 .vl-box.vl-off { --vl-top-cur: var(--vl-top-off-h); }
@@ -1431,9 +1438,12 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 .vl-party { color: #a4a6ab; }
 .vl-time { color: #65bd82; font-weight: 700; }
 /* not running: one compact line, [V] VALORANT  Not running */
-.vl-match.off { padding: 0 14px; opacity: .8; }
-.vl-match.off .vl-mtext { flex-direction: row; align-items: center; gap: 12px; }
-.vl-match.off .vl-m1 { font-size: 15px; font-weight: 600; color: var(--vl-muted); }
+.vl-match.off { padding: 0 var(--vl-off-pad); gap: var(--vl-off-gap); opacity: .8; }
+.vl-match.off .vl-tile { width: var(--vl-off-tile); height: var(--vl-off-tile); }
+.vl-match.off .vl-mark svg { height: min(var(--vl-off-mark-h), calc(var(--vl-off-tile) - 8px)); }
+.vl-match.off .vl-brand svg { height: var(--vl-off-word-h); }
+.vl-match.off .vl-mtext { flex-direction: row; align-items: center; gap: var(--vl-off-gap); }
+.vl-match.off .vl-m1 { font-size: var(--vl-off-text); font-weight: 600; color: var(--vl-muted); }
 .vl-match.off .vl-m2, .vl-match.off .vl-activity { display: none; }
 
 /* 2 · controls fill the rest of the first screen; Talk is the biggest and sits by the right thumb */
