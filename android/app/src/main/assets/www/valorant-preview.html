@@ -9,7 +9,8 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, "Segoe UI", Roboto, sans-serif; }
   main { display: flex; gap: 20px; padding: 16px; align-items: flex-start; flex-wrap: wrap; }
-  .stage { flex: none; }
+  /* the panel stays in view while the controls scroll past it */
+  .stage { flex: none; position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 16px 0 8px; margin-top: -16px; }
   .frame-wrap { width: calc(915px * var(--z)); height: calc(411px * var(--z)); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #000; }
   iframe { width: 915px; height: 411px; border: 0; transform: scale(var(--z)); transform-origin: 0 0; display: block; }
   .bar { display: flex; gap: 12px; align-items: center; margin-top: 8px; color: var(--muted); flex-wrap: wrap; }
