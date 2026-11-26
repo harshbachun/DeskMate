@@ -65,11 +65,40 @@ public sealed class AdbReverse(ConfigStore cfg, ILogger<AdbReverse> log, AgentEn
         {
             // while the session is ending nothing is started; the loop goes on, for a shutdown that is cancelled
             if (SessionEnding) { await Task.Delay(TimeSpan.FromSeconds(4), ct); continue; }
-            try { await Ensure(ct); }
-            catch (OperationCanceledException) { return; }
-            catch (Exception ex) { Report($"adb error: {ex.Message}"); }
+            try { await Ensure(ct); _failures = 0; }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested) { return; }
+            catch (Exception ex)
+            {
+                Report($"adb error: {ex.Message}");
+                // a wedged adb server (every call times out, or exits -1) never recovers by itself: restart it
+                if (++_failures >= 2) { _failures = 0; RestartAdbServer(); }
+            }
             await Task.Delay(TimeSpan.FromSeconds(4), ct);
         }
+    }
+
+    private int _failures;
+
+    /// <summary>Ends the adb server our adb talks to (the next call starts a fresh one), like "adb kill-server" when that hangs too.</summary>
+    private void RestartAdbServer()
+    {
+        var adb = FindAdb(cfg.Get().AdbPath);
+        if (adb is null) return;
+        var killed = 0;
+        foreach (var p in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(adb)))
+        {
+            using (p)
+            {
+                try
+                {
+                    if (!string.Equals(p.MainModule?.FileName, adb, StringComparison.OrdinalIgnoreCase)) continue;
+                    p.Kill();
+                    killed++;
+                }
+                catch { } // gone already, or not ours to end
+            }
+        }
+        log.LogInformation("adb kept failing: restarted the adb server ({Count} process(es) ended)", killed);
     }
 
     public async Task OpenPanelAsync()
