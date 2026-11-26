@@ -4,6 +4,7 @@
 import { W } from './registry.js';
 import './appearance.js';
 import { cached } from './widgets/helpers.js';
+import { valorantMark } from './widgets/valorant-logo.js';
 import './widgets/basic.js';
 import './widgets/stack.js';
 import './widgets/time.js';
@@ -316,9 +317,11 @@ const ICONS = {
 
 // Lucide shapes with several elements are stored as one path per element, joined with '|'.
 export function icon(name, cls = '') {
-  if (name === 'valorant') { // Deskmate: the VALORANT logo (valorant.png), as a page icon (":valorant:")
-    const im = new Image(); im.alt = ''; im.src = 'valorant.png'; im.className = 'ico ico-img' + (cls ? ' ' + cls : ''); im.dataset.icon = name;
-    return im;
+  if (name === 'valorant') { // Deskmate: the VALORANT mark in its red (#ff4655), as a page icon (":valorant:")
+    const t = document.createElement('template'); t.innerHTML = valorantMark;
+    const s = t.content.firstElementChild;
+    s.setAttribute('class', 'ico ico-vl' + (cls ? ' ' + cls : '')); s.dataset.icon = name;
+    return s;
   }
   const t = document.createElement('template');
   const paths = (ICONS[name] || '').split('|').map((d) => `<path d="${d}"/>`).join('');

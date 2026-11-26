@@ -183,7 +183,7 @@ body.night #pagePauseOverlay { display: none; }
 body.offline #offline { display: flex; align-items: center; gap: 5px; }
 .ico { width: 1em; height: 1em; vertical-align: -0.15em; flex: none; }
 .ico.m { margin-right: .35em; }
-img.ico-img { object-fit: contain; }
+svg.ico-vl { color: #ff4655; }
 
 /* ---------- calm page switching ---------- */
 #navCard {
@@ -1388,25 +1388,52 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 .vl-i { display: inline-flex; width: 1em; height: 1em; flex: none; }
 .vl-i svg { width: 100%; height: 100%; display: block; }
 
-/* 1 · match status, modelled on Discord's Valorant Rich Presence card */
-.vl-match { flex: none; height: 64px; display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 14px; background: var(--vl-panel); border: 1px solid var(--vl-line); text-align: left; }
+/* 1 · match status. Tunable in valorant-preview.html: these defaults are the release values, and the preview
+   overrides them on :root while you adjust. */
+:root {
+  --vl-top-h: 132px;        /* match card while VALORANT runs */
+  --vl-top-off-h: 46px;     /* match card while it does not (one line) */
+  --vl-peek: 16px;          /* how much of the stats card shows under the buttons */
+  --vl-btn-min: 120px;      /* the buttons never get shorter than this */
+  --vl-grad-solid: 40%;     /* #0e1822 is solid from the right edge to here… */
+  --vl-grad-clear: 85%;     /* …and fully transparent from here to the left edge */
+  --vl-map-x: 50%; --vl-map-y: 50%; /* which part of the map image shows */
+  --vl-map-bright: 1;       /* map image brightness */
+  --vl-text-w: 50%;         /* width of the text column on the right, over the map */
+  --vl-word-h: 12px;        /* VALORANT wordmark height */
+  --vl-mark-h: 22px;        /* V mark height (not running / no map) */
+  --vl-m1-size: 20px; --vl-m2-size: 15px;
+}
+.vl-box { --vl-top-cur: var(--vl-top-h); }
+.vl-box.vl-off { --vl-top-cur: var(--vl-top-off-h); }
+.vl-match { position: relative; overflow: hidden; flex: none; height: var(--vl-top-cur); display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; border-radius: 14px; background: #0e1822; border: 1px solid var(--vl-line); text-align: left; }
 .vl-match.live { border-color: rgba(255, 70, 85, .55); }
-.vl-match.off { opacity: .75; }
-.vl-thumb { flex: none; width: 48px; height: 48px; border-radius: 10px; overflow: hidden; background: var(--vl-panel-2); display: grid; place-items: center; }
-.vl-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.vl-thumb img.vl-logo { width: 62%; height: 62%; object-fit: contain; }
-.vl-mtext { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.vl-brand { font-size: 10px; font-weight: 800; letter-spacing: .16em; color: var(--vl-red); }
-.vl-m1 { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.vl-m2 { font-size: 13px; color: var(--vl-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vl-map-bg { position: absolute; inset: 0; background: no-repeat var(--vl-map-x) var(--vl-map-y) / cover; filter: brightness(var(--vl-map-bright)); }
+.vl-shade { position: absolute; inset: 0; background: linear-gradient(to left, #0e1822 var(--vl-grad-solid), rgba(14, 24, 34, 0) var(--vl-grad-clear)); }
+.vl-match:not(.has-map) .vl-map-bg, .vl-match:not(.has-map) .vl-shade { display: none; }
+.vl-mark { position: relative; flex: none; display: inline-flex; color: var(--vl-red); }
+.vl-mark svg { height: var(--vl-mark-h); width: auto; display: block; }
+.vl-match.has-map .vl-mark { display: none; }
+.vl-mtext { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.vl-match.has-map .vl-mtext { flex: none; width: var(--vl-text-w); margin-left: auto; }
+.vl-brand { display: inline-flex; color: var(--vl-red); }
+.vl-brand svg { height: var(--vl-word-h); width: auto; display: block; }
+.vl-m1 { font-size: var(--vl-m1-size); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vl-m2 { font-size: var(--vl-m2-size); color: var(--vl-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .vl-match.live .vl-m2 { color: var(--vl-ink); font-weight: 600; }
-.vl-activity { flex: none; display: flex; align-items: center; gap: .65em; white-space: nowrap; font-size: clamp(12px, 3cqw, 15px); font-variant-numeric: tabular-nums; }
+.vl-activity { display: flex; align-items: center; gap: .65em; white-space: nowrap; font-size: clamp(12px, 3cqw, 15px); font-variant-numeric: tabular-nums; margin-top: 2px; }
 .vl-party, .vl-time { display: inline-flex; align-items: center; gap: .3em; }
 .vl-party { color: #a4a6ab; }
 .vl-time { color: #65bd82; font-weight: 700; }
+/* not running: one compact line, [V] VALORANT  Not running */
+.vl-match.off { padding: 0 14px; opacity: .8; }
+.vl-match.off .vl-mtext { flex-direction: row; align-items: center; gap: 12px; }
+.vl-match.off .vl-m1 { font-size: 15px; font-weight: 600; color: var(--vl-muted); }
+.vl-match.off .vl-m2, .vl-match.off .vl-activity { display: none; }
 
 /* 2 · controls fill the rest of the first screen; Talk is the biggest and sits by the right thumb */
-.vl-controls { flex: none; height: calc(100cqh - 88px); min-height: 150px; display: grid; grid-template-columns: .8fr 1fr 1.35fr; gap: 8px; }
+.vl-controls { flex: none; height: calc(100cqh - var(--vl-top-cur) - 8px - var(--vl-peek)); min-height: var(--vl-btn-min); display: grid; grid-template-columns: .8fr 1fr 1.35fr; gap: 8px; }
 .vl-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border-radius: 18px; border: 1px solid var(--vl-line);
   background: var(--vl-panel); color: var(--vl-ink); font: inherit; text-align: center; padding: 10px; touch-action: pan-x pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; min-width: 0; }
 .vl-btn .vl-i, .vl-btn .vl-mute-icon { font-size: 40px; }

@@ -1,6 +1,7 @@
 import { API, PANEL_HEADERS, api, h, haptic, labelled, toast } from '../main.js';
 import { W } from '../registry.js';
 import { every } from './helpers.js';
+import { valorantMark, valorantWordmark } from './valorant-logo.js';
 
 // Deskmate: the Valorant page. One scrolling column, built for one hand during a match:
 //   1. match status (your own Riot presence, Discord-Rich-Presence style; tap it for the map's callout image)
@@ -33,7 +34,7 @@ const post = async (path) => {
   return { ok: r.ok, status: r.status, body };
 };
 const mmss = (ms) => { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
-const logo = () => { const im = new Image(); im.alt = ''; im.className = 'vl-logo'; im.src = 'valorant.png'; return im; };
+const svgSpan = (cls, markup) => { const s = document.createElement('span'); s.className = cls; s.innerHTML = markup; return s; };
 const mapUrl = (name) => `${API}/valorant/map?name=${encodeURIComponent(name)}`;
 
 /** Full-screen, pinch-zoomable map image (tap ✕ or the dark edge to close). */
@@ -86,13 +87,18 @@ W.valorant = {
     let data = null, loaded = false, failed = false;
 
     // ---- 1. match status ------------------------------------------------------------------------------------------
-    const thumb = h('div', 'vl-thumb');
+    // The map image fills the card's background; a #0e1822 gradient from the right keeps the text readable.
+    // Sizes and the gradient are CSS variables (--vl-*, see style.css), tuned in valorant-preview.html.
+    const mapBg = h('div', 'vl-map-bg'), shade = h('div', 'vl-shade');
+    const mark = svgSpan('vl-mark', valorantMark);
+    const brand = svgSpan('vl-brand', valorantWordmark);
     const mLine1 = h('div', 'vl-m1'), mLine2 = h('div', 'vl-m2');
     const partyCount = h('span'), elapsed = h('span');
     const party = h('span', 'vl-party', SVG(ICON.party), partyCount);
     const timer = h('span', 'vl-time', SVG(ICON.gamepad), elapsed);
     const activity = h('div', 'vl-activity', party, timer);
-    const match = h('section', 'vl-match', thumb, h('div', 'vl-mtext', h('div', 'vl-brand', 'VALORANT'), mLine1, mLine2), activity);
+    const match = h('section', 'vl-match', mapBg, shade, mark, h('div', 'vl-mtext', brand, mLine1, mLine2, activity));
+    let shownMap = null;
     match.addEventListener('click', () => { const m = data?.presence?.map; if (m && data.presence.mapImage) openMapViewer(m); });
 
     // ---- 2. controls --------------------------------------------------------------------------------------------
@@ -115,7 +121,13 @@ W.valorant = {
     box.append(scroll);
 
     const load = async () => {
-      try { data = await api('/valorant'); loaded = true; failed = false; }
+      try {
+        data = await api('/valorant'); loaded = true; failed = false;
+        // valorant-preview.html (the design preview) swaps in demo game states; never set on the phone
+        let demo = null;
+        try { demo = window.parent !== window ? window.parent.__vlDemo : null; } catch (_) {}
+        if (typeof demo === 'function') data = demo(data);
+      }
       catch (_) { failed = true; }
       render();
       return !failed;
@@ -241,18 +253,18 @@ W.valorant = {
         party.setAttribute('aria-label', 'Party size: ' + partyCount.textContent);
       }
       if (!timer.hidden) elapsed.textContent = mmss(Date.now() - since);
-      thumb.replaceChildren();
-      if (!loaded) { mLine1.textContent = failed ? 'PC not answering' : 'Connecting…'; mLine2.textContent = ''; return; }
-      if (!g?.running) {
-        thumb.append(logo());
-        mLine1.textContent = 'Not running';
-        mLine2.textContent = 'Opens by itself when VALORANT starts';
+      const off = loaded && !g?.running;
+      box.classList.toggle('vl-off', off);
+      const mapName = !off && p?.map && p.mapImage ? p.map : null;
+      if (mapName !== shownMap) { shownMap = mapName; mapBg.style.backgroundImage = mapName ? `url("${mapUrl(mapName)}")` : ''; }
+      if (!loaded) { match.className = 'vl-match'; mLine1.textContent = failed ? 'PC not answering' : 'Connecting…'; mLine2.textContent = ''; return; }
+      if (off) { // compact: logo, wordmark, one word
         match.className = 'vl-match off';
+        mLine1.textContent = 'Not running';
+        mLine2.textContent = '';
         return;
       }
-      match.className = 'vl-match' + (p?.loop === 'INGAME' ? ' live' : '');
-      if (p?.map && p.mapImage) { const im = new Image(); im.alt = ''; im.src = mapUrl(p.map); thumb.append(im); }
-      else thumb.append(logo());
+      match.className = 'vl-match' + (mapName ? ' has-map' : '') + (p?.loop === 'INGAME' ? ' live' : '');
       if (!p) {
         mLine1.textContent = 'In VALORANT';
         mLine2.textContent = data.presenceError || 'Waiting for the Riot Client';

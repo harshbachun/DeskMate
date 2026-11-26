@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VALORANT card preview</title>
+<style>
+  :root { color-scheme: dark; --bg: #07090c; --panel: #11161d; --line: #232b36; --ink: #e8ecf1; --muted: #8a95a3; --accent: #ff4655; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, "Segoe UI", Roboto, sans-serif; }
+  main { display: flex; gap: 20px; padding: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .stage { flex: none; }
+  .frame-wrap { width: calc(915px * var(--z)); height: calc(411px * var(--z)); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #000; }
+  iframe { width: 915px; height: 411px; border: 0; transform: scale(var(--z)); transform-origin: 0 0; display: block; }
+  .bar { display: flex; gap: 12px; align-items: center; margin-top: 8px; color: var(--muted); flex-wrap: wrap; }
+  aside { flex: 1; min-width: 320px; max-width: 520px; display: flex; flex-direction: column; gap: 12px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  h1 { font-size: 16px; margin: 0 0 2px; } h2 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  .states { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .states button, .btn { background: #18202a; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px; font: inherit; cursor: pointer; }
+  .states button.on { border-color: var(--accent); background: #2a1418; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+  label { display: flex; flex-direction: column; gap: 3px; color: var(--muted); }
+  input, select { background: #0b0f14; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; font: inherit; }
+  .slider { display: grid; grid-template-columns: 150px 1fr 64px; align-items: center; gap: 10px; margin: 6px 0; }
+  .slider span { color: var(--muted); } .slider output { text-align: right; font-variant-numeric: tabular-nums; }
+  input[type=range] { padding: 0; accent-color: var(--accent); }
+  pre { margin: 0; background: #0b0f14; border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow: auto; font-size: 12px; }
+  .row { display: flex; gap: 8px; margin-top: 8px; }
+  .hint { color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<main>
+  <div class="stage">
+    <div class="frame-wrap" id="wrap" style="--z:1"><iframe id="panel" src="./" title="Deskmate panel"></iframe></div>
+    <div class="bar">
+      <label style="flex-direction:row;align-items:center;gap:6px">Zoom
+        <select id="zoom"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label>
+      <label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="hold" checked> Keep the panel on the VALORANT page</label>
+      <span>915 × 411, the A52's screen</span>
+    </div>
+  </div>
+
+  <aside>
+    <section>
+      <h1>VALORANT card preview</h1>
+      <p class="hint">The real panel with demo game states. Sliders change the page live. Nothing is saved to Deskmate until the values below are put in <code>style.css</code>.</p>
+    </section>
+    <section>
+      <h2>Game state</h2>
+      <div class="states" id="states">
+        <button data-s="live">Live data</button><button data-s="off">Not running</button><button data-s="lobby">In lobby</button>
+        <button data-s="pregame">Agent select</button><button data-s="ingame">In match</button>
+      </div>
+    </section>
+    <section>
+      <h2>Demo data</h2>
+      <div class="grid">
+        <label>Map <select id="map"></select></label>
+        <label>Mode <select id="mode"><option>Competitive</option><option>Unrated</option><option>Swiftplay</option><option>Spike Rush</option><option>Deathmatch</option><option>Premier</option></select></label>
+        <label>Your score <input id="ally" type="number" min="0" max="25" value="7"></label>
+        <label>Enemy score <input id="enemy" type="number" min="0" max="25" value="5"></label>
+        <label>Party size <input id="party" type="number" min="1" max="5" value="3"></label>
+        <label>Party max <input id="partyMax" type="number" min="1" max="5" value="5"></label>
+        <label>Elapsed (min) <input id="mins" type="number" min="0" max="90" value="14"></label>
+      </div>
+    </section>
+    <section>
+      <h2>Layout</h2>
+      <div id="sliders"></div>
+      <div class="row"><button class="btn" id="reset">Reset to release values</button></div>
+    </section>
+    <section>
+      <h2>Values to release</h2>
+      <pre id="out"></pre>
+      <div class="row"><button class="btn" id="copy">Copy</button></div>
+    </section>
+  </aside>
+</main>
+<script>
+// Each slider is one CSS variable from style.css (the defaults there are the release values).
+const VARS = [
+  ['--vl-top-h', 'Card height (running)', 60, 240, 1, 'px', 132],
+  ['--vl-top-off-h', 'Card height (not running)', 32, 120, 1, 'px', 46],
+  ['--vl-peek', 'Stats peek below buttons', 0, 60, 1, 'px', 16],
+  ['--vl-btn-min', 'Buttons min height', 60, 260, 1, 'px', 120],
+  ['--vl-grad-solid', 'Gradient solid to', 0, 100, 1, '%', 40],
+  ['--vl-grad-clear', 'Gradient clear from', 0, 100, 1, '%', 85],
+  ['--vl-map-x', 'Map focus X', 0, 100, 1, '%', 50],
+  ['--vl-map-y', 'Map focus Y', 0, 100, 1, '%', 50],
+  ['--vl-map-bright', 'Map brightness', 0.2, 1.5, 0.05, '', 1],
+  ['--vl-text-w', 'Text column width', 30, 80, 1, '%', 50],
+  ['--vl-word-h', 'Wordmark height', 6, 30, 1, 'px', 12],
+  ['--vl-mark-h', 'V mark height', 10, 60, 1, 'px', 22],
+  ['--vl-m1-size', 'Line 1 text size', 10, 32, 1, 'px', 20],
+  ['--vl-m2-size', 'Line 2 text size', 9, 26, 1, 'px', 15],
+];
+const MAPS = ['Abyss', 'Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset'];
+const KEY = 'deskmate.vlPreview';
+const $ = (id) => document.getElementById(id);
+const iframe = $('panel');
+let st = { state: 'ingame', vals: {}, demo: {} };
+try { Object.assign(st, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (_) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+
+$('map').innerHTML = MAPS.map((m) => `<option${m === 'Summit' ? ' selected' : ''}>${m}</option>`).join('');
+const demoFields = ['map', 'mode', 'ally', 'enemy', 'party', 'partyMax', 'mins'];
+for (const f of demoFields) {
+  if (st.demo[f] != null) $(f).value = st.demo[f];
+  $(f).addEventListener('input', () => { st.demo[f] = $(f).value; save(); });
+}
+
+// what the widget gets instead of /api/valorant (it reads window.parent.__vlDemo on every poll)
+window.__vlDemo = (real) => {
+  if (st.state === 'live') return real;
+  const d = Object.fromEntries(demoFields.map((f) => [f, $(f).value]));
+  const since = Date.now() - (+d.mins || 0) * 60000;
+  if (st.state === 'off') return { ...real, game: { running: false }, presence: null };
+  const p = { status: 'In lobby', loop: 'MENUS', map: null, mapImage: false, mode: d.mode, ally: null, enemy: null,
+    partySize: +d.party, maxPartySize: +d.partyMax, since };
+  if (st.state === 'pregame') Object.assign(p, { status: 'Agent select', loop: 'PREGAME', map: d.map, mapImage: true });
+  if (st.state === 'ingame') Object.assign(p, { status: 'In game', loop: 'INGAME', map: d.map, mapImage: true, ally: +d.ally, enemy: +d.enemy });
+  return { ...real, game: { running: true, since }, presence: p };
+};
+
+const states = $('states');
+const showState = () => states.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.s === st.state));
+states.addEventListener('click', (e) => { const s = e.target.dataset?.s; if (s) { st.state = s; save(); showState(); } });
+showState();
+
+// sliders
+const cur = (v) => (st.vals[v[0]] ?? v[6]);
+const css = (v) => cur(v) + v[5];
+const apply = () => {
+  const root = iframe.contentDocument?.documentElement;
+  if (root) for (const v of VARS) root.style.setProperty(v[0], css(v));
+  $('out').textContent = ':root {\n' + VARS.map((v) => `  ${v[0]}: ${css(v)};`).join('\n') + '\n}';
+};
+$('sliders').append(...VARS.map((v) => {
+  const row = document.createElement('div'); row.className = 'slider';
+  row.innerHTML = `<span>${v[1]}</span><input type="range" min="${v[2]}" max="${v[3]}" step="${v[4]}"><output></output>`;
+  const r = row.querySelector('input'), o = row.querySelector('output');
+  const show = () => { r.value = cur(v); o.textContent = css(v); };
+  r.addEventListener('input', () => { st.vals[v[0]] = +r.value; save(); o.textContent = css(v); apply(); });
+  show(); row._show = show;
+  return row;
+}));
+$('reset').addEventListener('click', () => { st.vals = {}; save(); document.querySelectorAll('.slider').forEach((r) => r._show()); apply(); });
+$('copy').addEventListener('click', () => navigator.clipboard?.writeText($('out').textContent));
+$('zoom').addEventListener('change', () => $('wrap').style.setProperty('--z', $('zoom').value));
+
+// keep the panel on the VALORANT page, awake
+let pageIndex = -1;
+fetch('/api/settings').then((r) => r.json()).then((c) => {
+  pageIndex = (c.pages || []).filter((p) => p.enabled !== false).findIndex((p) => p.id === 'valorant');
+}).catch(() => {});
+const hold = () => {
+  const doc = iframe.contentDocument; if (!doc) return;
+  apply();
+  doc.body?.classList.remove('dimmed');
+  const pager = doc.getElementById('pager');
+  if ($('hold').checked && pager && pageIndex >= 0) {
+    const left = pageIndex * pager.clientWidth;
+    if (Math.abs(pager.scrollLeft - left) > 2) pager.scrollTo({ left, behavior: 'instant' });
+  }
+};
+iframe.addEventListener('load', () => setTimeout(hold, 800));
+setInterval(hold, 1500);
+apply();
+</script>
+</body>
+</html>
