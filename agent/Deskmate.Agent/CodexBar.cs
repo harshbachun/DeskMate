@@ -325,7 +325,7 @@ internal static class CodexBar
                 list.Add(p);
                 continue;
             }
-            // Only promote a prior reading that was itself healthy — never clear an error that arrived with limits.
+            // Only promote a prior reading that was itself healthy - never clear an error that arrived with limits.
             if (HeldReading(old, now) is { } held)
             {
                 list.Add(held);

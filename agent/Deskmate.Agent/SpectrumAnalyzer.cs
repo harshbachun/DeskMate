@@ -38,7 +38,7 @@ public sealed class SpectrumAnalyzer(ConfigStore config, ILogger<SpectrumAnalyze
     /// <summary>True while a panel wants frames and capture is running.</summary>
     public bool Active => Now < Interlocked.Read(ref _wantedUntil) && Running;
 
-    /// <summary>The latest bands, 0–100 each, or null before the first one.</summary>
+    /// <summary>The latest bands, 0-100 each, or null before the first one.</summary>
     public int[]? Frame() => _frame;
 
     public bool Shown() => config.Get().Widgets(enabledPagesOnly: true).Any(w => w.Type == WidgetType);
@@ -56,8 +56,8 @@ public sealed class SpectrumAnalyzer(ConfigStore config, ILogger<SpectrumAnalyze
     }
 
     /// <summary>
-    /// The band levels (0–100) of the last <see cref="FftSize"/> mono samples: Hann window, FFT, the loudest bin in each
-    /// of <see cref="Bands"/> log-spaced bands from 40 Hz to 16 kHz, in dB with a treble lift, mapped to 0–100.
+    /// The band levels (0-100) of the last <see cref="FftSize"/> mono samples: Hann window, FFT, the loudest bin in each
+    /// of <see cref="Bands"/> log-spaced bands from 40 Hz to 16 kHz, in dB with a treble lift, mapped to 0-100.
     /// </summary>
     internal static int[] Analyze(ReadOnlySpan<float> samples, int sampleRate)
     {
@@ -152,7 +152,7 @@ public sealed class SpectrumAnalyzer(ConfigStore config, ILogger<SpectrumAnalyze
         var ch = Math.Max(1, channels);
         var sampleBytes = bits / 8;
         // stereo sound on a surround output (a 4-channel controller, 5.1 / 7.1) fills only the front pair: dividing by
-        // every channel would lower it 6–12 dB, so the sum is scaled like stereo
+        // every channel would lower it 6-12 dB, so the sum is scaled like stereo
         var scale = gain / Math.Min(ch, 2);
         for (var off = 0; off + frameBytes <= buf.Length; off += frameBytes)
         {

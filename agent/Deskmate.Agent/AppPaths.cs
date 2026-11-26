@@ -11,14 +11,14 @@ public static class AppPaths
     private static string Xdg(string variable, string fallback) =>
         Environment.GetEnvironmentVariable(variable) is { Length: > 0 } v ? v : Path.Combine(Home, fallback);
 
-    /// <summary>%APPDATA%\Deskmate — user settings (config.json).</summary>
+    /// <summary>%APPDATA%\Deskmate - user settings (config.json).</summary>
     /// <summary>Windows: %APPDATA%\Deskmate. Linux: ~/.config/Deskmate. macOS: ~/Library/Application Support/Deskmate.</summary>
     public static readonly string ConfigDir = Path.Combine(
         OperatingSystem.IsWindows() ? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
         : OperatingSystem.IsMacOS() ? Path.Combine(Home, "Library", "Application Support")
         : Xdg("XDG_CONFIG_HOME", ".config"), AppName);
 
-    /// <summary>%LOCALAPPDATA%\Deskmate — logs and the installed binaries.</summary>
+    /// <summary>%LOCALAPPDATA%\Deskmate - logs and the installed binaries.</summary>
     /// <summary>Windows: %LOCALAPPDATA%\Deskmate. Linux: ~/.local/share/Deskmate. macOS: same folder as the settings.</summary>
     public static readonly string LocalDir = Path.Combine(
         OperatingSystem.IsWindows() ? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)

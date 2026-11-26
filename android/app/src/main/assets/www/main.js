@@ -86,16 +86,16 @@ let evGen = 0;                    // bumped when a restart arms evReplay, so an 
 let stateTs = 0;                  // server ts of the newest state applied (a late response must not reset the events)
 const evSeen = new Set();         // event seqs already handled in this agent run (the stream and a poll can repeat one)
 const evMark = (s) => { evSeen.add(s); if (evSeen.size > 400) evSeen.delete(evSeen.values().next().value); };
-let evQueue = [];                 // live events held while a replay is armed — the backlog must apply before them
-let evDrop = 0;                   // highest seq pushed out of a full evQueue (0 = none lost) — replay covers them or retries
+let evQueue = [];                 // live events held while a replay is armed - the backlog must apply before them
+let evDrop = 0;                   // highest seq pushed out of a full evQueue (0 = none lost) - replay covers them or retries
 const evDrain = () => {           // the backlog applied: release the held events in seq order
   for (const e of evQueue.sort((a, b) => a.seq - b.seq)) if (!evSeen.has(e.seq)) { evMark(e.seq); handleEvent(e); }
   evQueue = [];
 };
-let evPre = null;                 // stream events before the first state of a connection — that state picks the run first
+let evPre = null;                 // stream events before the first state of a connection - that state picks the run first
 const evOffer = (e) => {          // one event from the stream or a state answer: dedupe, then hold or dispatch
   if (typeof e.seq !== 'number' || evSeen.has(e.seq)) return;
-  // a replay is armed: hold it so the backlog applies first — the drain sorts held and replayed events together
+  // a replay is armed: hold it so the backlog applies first - the drain sorts held and replayed events together
   if (evReplay) {
     if (!evQueue.some((q) => q.seq === e.seq)) evQueue.push(e);
     if (evQueue.length > 100) evDrop = Math.max(evDrop, evQueue.shift().seq);
@@ -169,7 +169,7 @@ export function en(text) {
   return e;
 }
 
-/* Interface icons: Lucide (https://lucide.dev), ISC license — a small inline set keeps the
+/* Interface icons: Lucide (https://lucide.dev), ISC license - a small inline set keeps the
    panel's chrome consistent across platforms and works fully offline. Icons are decorative
    (aria-hidden); the controls they sit in carry the accessible names.
    Lucide licence (ISC): Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).
@@ -372,7 +372,7 @@ export const fmtClock = (H, M) => (hour12() ? `${H % 12 || 12}:${pad(M)} ${H < 1
 export const fmtHM = (d) => fmtClock(d.getHours(), d.getMinutes());
 export const fmtTime = (ms) => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + pad(s % 60); };
 export function fmtRate(bps) {
-  if (bps == null) return ['—', ''];
+  if (bps == null) return ['-', ''];
   if (bps >= 1e9) return [(bps / 1e9).toFixed(1), 'GB/s'];
   if (bps >= 1e6) return [(bps / 1e6).toFixed(bps >= 1e8 ? 0 : 1), 'MB/s'];
   if (bps >= 1e3) return [(bps / 1e3).toFixed(0), 'KB/s'];
@@ -395,7 +395,7 @@ export function shortDur(ms) {
   return hr < 24 ? `${hr}h ${m % 60}m` : `${Math.floor(hr / 24)}d`;
 }
 export const ago = (ts) => { const d = Date.now() - ts; return d < 60_000 ? t('time.justNow') : t('time.ago', { dur: shortDur(d) }); };
-export const r1 = (v) => (v == null ? '—' : (Math.round(v * 10) / 10).toString());
+export const r1 = (v) => (v == null ? '-' : (Math.round(v * 10) / 10).toString());
 export const fmtMem = (mb) => (mb >= 1024 ? (mb / 1024).toFixed(1) + ' GB' : Math.round(mb) + ' MB');
 export const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const color = (c) => (c && c.startsWith('--') ? cssVar(c) : c);
@@ -514,7 +514,7 @@ export const METRICS = {
   down: { label: 'DOWNLOAD', name: 'Download', color: '--net', rate: true, max: netMax, val: (s) => s.pc?.netDownBps },
   up: { label: 'UPLOAD', name: 'Upload', color: '--up', rate: true, max: netMax, val: (s) => s.pc?.netUpBps },
   ping: { label: 'PING', name: 'Ping', color: '#38bdf8', unit: 'ms', max: () => Math.max(50, ...hist.ping) * 1.2, val: (s) => s.ping?.ms,
-    sub: (s) => (s.ping ? `avg ${s.ping.avgMs ?? '—'} ms · loss ${s.ping.lossPct}%` : '') },
+    sub: (s) => (s.ping ? `avg ${s.ping.avgMs ?? '-'} ms · loss ${s.ping.lossPct}%` : '') },
   gputemp: { label: 'GPU TEMP', name: 'GPU temperature', color: '#f97316', unit: '°C', max: () => 100, hot: [75, 85], val: (s) => gpuOf(s)?.temp,
     sub: (s) => {
       const g = gpuOf(s);
@@ -549,7 +549,7 @@ export function metricText(m, s) {
   const v = m.val(s);
   if (m.rate) return fmtRate(v);
   const unit = (typeof m.unit === 'function' ? m.unit(s) : m.unit) || '';
-  if (v == null) return ['—', unit];
+  if (v == null) return ['-', unit];
   return [m.fmt ? m.fmt(v) : String(Math.round(v)), unit];
 }
 
@@ -567,7 +567,7 @@ export const WX = {
 };
 export const wxIcon = (code, day = 1) => { const x = WX[code] || [null, '🌡️']; return day === 0 && x[2] ? x[2] : x[1]; };
 /** The condition in the panel's language, or an em dash for a code Open-Meteo does not list. */
-export const wxText = (code) => { const x = WX[code]; return x ? t(x[0]) : '—'; };
+export const wxText = (code) => { const x = WX[code]; return x ? t(x[0]) : '-'; };
 /** A temperature from Open-Meteo (always °C) rounded in the configured unit; the raw forecast stays in °C. */
 export const wxDeg = (c) => Math.round(cfg.weather?.unit === 'fahrenheit' ? c * 9 / 5 + 32 : c);
 
@@ -879,7 +879,7 @@ export function prRow(p, mine) {
   const row = h('div', 'gh-pr' + (p.draft ? ' draft' : ''));
   if (mine) {
     const ciMap = { SUCCESS: '✓', FAILURE: '✗', ERROR: '✗', PENDING: '●', EXPECTED: '●' };
-    row.appendChild(h('span', 'ci ' + (p.ci || 'none'), ciMap[p.ci] || '–'));
+    row.appendChild(h('span', 'ci ' + (p.ci || 'none'), ciMap[p.ci] || '-'));
   } else {
     row.appendChild(h('span', 'ci none', '◇'));
   }
@@ -1060,7 +1060,7 @@ export function pushView(item) {
 export function fmtValue(x) {
   if (typeof x === 'number') return Math.abs(x) >= 100 ? String(Math.round(x)) : String(Math.round(x * 10) / 10);
   if (typeof x === 'boolean') return x ? 'On' : 'Off';
-  return x == null ? '—' : String(x);
+  return x == null ? '-' : String(x);
 }
 export const LEVEL_COLOR = { ok: '#22c55e', success: '#22c55e', warn: '#f59e0b', warning: '#f59e0b', error: '#ef4444', fail: '#ef4444', failure: '#ef4444', info: '#60a5fa' };
 export const levelOf = (v) => v.level || (typeof v.value === 'string' ? (/^(ok|pass(ed)?|success|green|up|online)$/i.test(v.value) ? 'ok'
@@ -2134,7 +2134,7 @@ export function setOnline(on) {
 export function applyState(s, replayGen = null) {
   lastStateAt = Date.now();
   // compares the agent's wall clock across responses: if the PC's clock steps back (NTP), polled events are
-  // ignored until it catches up — the stream still delivers them meanwhile
+  // ignored until it catches up - the stream still delivers them meanwhile
   // a late answer is at most a few seconds old (the request deadline), so a bigger step back is the clock itself
   const fresh = s.ts == null || s.ts >= stateTs || stateTs - s.ts > 10_000;
   // the answer to a ?ev=0 replay can be overtaken by streamed states on the way; its events are still the backlog.
@@ -2148,7 +2148,7 @@ export function applyState(s, replayGen = null) {
   if (s.pushVersion !== undefined && s.pushVersion !== pushVersion) loadPush();
   if (fresh) {
     stateTs = s.ts ?? stateTs;
-    // the agent restarted: it counts events from 0 again — forget what was handled and replay its backlog once
+    // the agent restarted: it counts events from 0 again - forget what was handled and replay its backlog once
     if (evSeq != null && s.evSeq != null && s.evSeq < evSeq) { evSeen.clear(); evQueue = []; evDrop = 0; evReplay = true; evGen++; evSeq = 0; }
     evSeq = Math.max(evSeq ?? 0, s.evSeq ?? 0);
   }
@@ -2183,7 +2183,7 @@ export let streamOn = false;
 export let lastStateAt = 0;
 window.onAgentStream = (event, data) => {
   // the stream can send events before its first state (Program.cs sends the backlog first): an event that is only
-  // new to this run would dispatch now and again when the replay delivers it — hold them until the state decides
+  // new to this run would dispatch now and again when the replay delivers it - hold them until the state decides
   if (event === 'open') { streamOn = true; evPre = []; return; }
   if (event === 'close') { streamOn = false; return; }
   let d;
@@ -2195,8 +2195,8 @@ window.onAgentStream = (event, data) => {
 };
 export const streaming = () => streamOn && Date.now() - lastStateAt < 3000;
 
-// Nobody can see the panel: the screen is off or another app is in front (the shell tells us — WebView.onPause() does not
-// stop JavaScript — and a browser tab reports it as hidden). The shell closes the stream then, and the polling that
+// Nobody can see the panel: the screen is off or another app is in front (the shell tells us - WebView.onPause() does not
+// stop JavaScript - and a browser tab reports it as hidden). The shell closes the stream then, and the polling that
 // would take over, the 250 ms refresh and the periodic loads below all wait. Clocks, timers and alarms keep running.
 let appPaused = false;
 export const idle = () => appPaused || document.hidden;
@@ -2224,7 +2224,7 @@ export async function poll() {
     try {
       const s = await api('/state' + (replay ? '?ev=0' : evSeq != null ? '?ev=' + evSeq : ''));
       // disarm only when this replay's own answer applied: a stale answer or a restart armed meanwhile keeps it
-      // on, and so does an answer that ends before the seqs pushed out of the full buffer — the next pass gets them
+      // on, and so does an answer that ends before the seqs pushed out of the full buffer - the next pass gets them
       if (applyState(s, replay ? gen : null) && replay && gen === evGen) { evReplay = s.evSeq != null && s.evSeq < evDrop; evDrop = 0; if (!evReplay) evDrain(); }
     }
     catch (_) { if (!streaming()) setOnline(false); }

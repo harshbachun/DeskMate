@@ -387,7 +387,7 @@ public sealed partial class QuotaMonitor(ConfigStore config, ILogger<QuotaMonito
                 catch (Exception ex)
                 {
                     log.LogDebug("CodexBar: {Message}", ex.Message);
-                    // Do not wipe last-good limits — only mark an error when there is nothing to show.
+                    // Do not wipe last-good limits - only mark an error when there is nothing to show.
                     _external = _external.Select(p => p.Limits.Count > 0 ? p : p with { Error = "CodexBar refresh failed" }).ToList();
                     _nextCodexBar = Environment.TickCount64 + 60_000;
                 }

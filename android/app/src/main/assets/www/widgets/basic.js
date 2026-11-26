@@ -260,7 +260,7 @@ W.media = {
         q('.m-app-name').textContent = m.app || 'Media';
         sourceIcon.innerHTML = sourceIcons[m.app] || '';
         q('.m-title').textContent = m.title || 'Unknown track';
-        q('.m-artist').textContent = [m.artist, m.album].filter(Boolean).join(' · ') || '—';
+        q('.m-artist').textContent = [m.artist, m.album].filter(Boolean).join(' · ') || '-';
         if (m.app === 'Internet Radio' && !(m.durMs > 0)) {
           q('.fill').style.width = m.playing ? '100%' : '0';
           q('.m-pos').textContent = fmtTime(m.posMs || 0);
@@ -298,7 +298,7 @@ W.stat = {
     box.style.setProperty('--c', c);
     const canvas = h('canvas');
     const lbl = h('div', 't-label', m.label);
-    const val = h('b', null, '—'), unit = h('small'), sub = h('div', 't-sub', ' ');
+    const val = h('b', null, '-'), unit = h('small'), sub = h('div', 't-sub', ' ');
     box.append(canvas, lbl, h('div', 't-val', val, unit), sub);
     if (o.metric === 'cpu' || o.metric === 'ram') bindProcessLink(box, o.metric === 'cpu' ? 'cpu' : 'mem');
     return {
@@ -377,7 +377,7 @@ W.chart = {
             e.style.color = color(mm.color);
             return e;
           }));
-          head.lastChild.textContent = isNet && s.ping ? `Ping ${s.ping.ms != null ? Math.round(s.ping.ms) + ' ms' : '—'} · loss ${s.ping.lossPct}%` : '';
+          head.lastChild.textContent = isNet && s.ping ? `Ping ${s.ping.ms != null ? Math.round(s.ping.ms) + ' ms' : '-'} · loss ${s.ping.lossPct}%` : '';
         }
         chart(canvas, keys.map((k) => ({ data: hist[METRICS[k].hist || k], color: color(METRICS[k].color), max: METRICS[k].max(s) })), { grid: true });
       },
@@ -451,7 +451,7 @@ W.quotas = {
    * Creates the AI Quotas widget instance with optional paged provider rotation.
    */
   create(box, { o }) {
-    const tokens = (n) => n == null ? '—' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n);
+    const tokens = (n) => n == null ? '-' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n);
     const grid = h('div', 'q-grid', h('div', 'empty', 'Quota data arrives once the computer is connected.'));
     box.append(grid);
     let last = 0;
@@ -686,7 +686,7 @@ W.sessions = {
     const list = h('div', 's-list', h('div', 'empty', t('sess.waitingData')));
     box.append(h('div', 'w-head', h('span', 's-label', t('w.sessions')), sum), list);
     box.style.setProperty('--c', '#d97757');
-    const tokens = (n) => n == null ? '—' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n);
+    const tokens = (n) => n == null ? '-' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n);
     const statusText = (s) => s.status === 'busy' ? t('sess.working') : s.status === 'waiting' ? t('sess.waiting') : s.status === 'shell' ? t('sess.shell') : s.outcome === 'completed' ? t('sess.completed') : s.outcome === 'aborted' ? t('sess.aborted') : t('sess.idle');
     const ageText = (since) => Date.now() - since < 60_000 ? 'just now' : shortDur(Date.now() - since) + ' ago';
     // A Claude Code chat's title (the agent sends it only when Settings › Claude Code › "Show session titles on the phone"
@@ -993,7 +993,7 @@ W.worldclock = {
           const diffH = Math.round((zoneUtc - localUtc) / 360000) / 10;
           const dayDiff = Math.round((Date.UTC(+p.year, +p.month - 1, +p.day) - Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
           const day = dayDiff > 0 ? t('time.tomorrow') : dayDiff < 0 ? t('time.yesterday') : t('time.today');
-          it.s.textContent = diffH === 0 ? day : `${day}, ${diffH > 0 ? '+' : '−'}${Math.abs(diffH)}h`;
+          it.s.textContent = diffH === 0 ? day : `${day}, ${diffH > 0 ? '+' : '-'}${Math.abs(diffH)}h`;
         }
       },
     };
@@ -1189,7 +1189,7 @@ W.countdown = {
     }
     const big = h('div', 'cd-v'), sub = h('div', 'cd-s');
     box.append(h('div', 'cd-l', o.label || 'Countdown'), big, sub);
-    if (Number.isNaN(target)) { big.textContent = '—'; sub.textContent = t('w.setDateFormat'); return {}; }
+    if (Number.isNaN(target)) { big.textContent = '-'; sub.textContent = t('w.setDateFormat'); return {}; }
     sub.textContent = new Date(target).toLocaleDateString(LOCALE, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + fmtHM(new Date(target));
     return {
       update() {
@@ -1316,7 +1316,7 @@ W.command = {
         const short = text.length <= 14 && !text.includes('\n');
         out.classList.toggle('big', short);
         box.classList.toggle('bad', res.ok === false);
-      } catch (_) { if (!res) out.textContent = online ? t('w.unavailable') : '—'; }
+      } catch (_) { if (!res) out.textContent = online ? t('w.unavailable') : '-'; }
       busy = false;
     };
     box.addEventListener('click', () => { haptic(); last = Date.now(); load(true).then(() => setTimeout(() => load(false), 1500)); });

@@ -84,7 +84,7 @@ internal static class ShortcutIcons
 
     /// <summary>
     /// True for an actual file path ("C:\…\app.exe", "/usr/bin/x", "code", "~/bin/x"); false for a builtin: command,
-    /// a URL, a protocol handler (ms-settings:) or a shell address (shell:AppsFolder\…) — none of which name a file.
+    /// a URL, a protocol handler (ms-settings:) or a shell address (shell:AppsFolder\…) - none of which name a file.
     /// </summary>
     internal static bool LooksLikeFilePath(string cmd)
     {

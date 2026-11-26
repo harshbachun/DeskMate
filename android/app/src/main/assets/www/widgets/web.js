@@ -127,7 +127,7 @@ W.exchange = {
         list.replaceChildren(...syms.map((s) => {
           const series = days.map((k) => d.rates[k]?.[s]).filter((v) => Number.isFinite(v) && v > 0);
           const last = series[series.length - 1], prev = series[series.length - 2];
-          const change = prev === undefined ? h('span', 'chg', '—') : pctSpan(((last - prev) / prev) * 100);
+          const change = prev === undefined ? h('span', 'chg', '-') : pctSpan(((last - prev) / prev) * 100);
           const c = h('canvas', 'fx-sp');
           const row = h('div', 'fx-i', h('b', null, s), h('span', 'fx-v', fmtNum(last)), change, c);
           requestAnimationFrame(() => sparkLine(c, series, last >= series[0] ? '#22c55e' : '#ef4444'));

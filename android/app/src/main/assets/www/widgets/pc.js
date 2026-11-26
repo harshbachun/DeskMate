@@ -111,7 +111,7 @@ W.obs = {
       const recLabel = s.recordPaused ? 'PAUSED' : 'REC';
       const kids = [
         h('div', 'obs-top', pill(s.streaming, 'LIVE', 'live', s.streamMs, 'stream'), pill(s.recording, recLabel, 'rec', s.recordPaused ? s.recordMs - since : s.recordMs, 'record')),
-        h('div', 'obs-scene', h('span', null, 'Scene'), h('b', null, s.scene || '—'),
+        h('div', 'obs-scene', h('span', null, 'Scene'), h('b', null, s.scene || '-'),
           s.micMuted != null ? h('span', 'obs-mic' + (s.micMuted ? ' muted' : ''), emo(s.micMuted ? '🔇' : '🎙️')) : null),
       ];
       if (o.scenes !== false && s.scenes.length) {
@@ -429,7 +429,7 @@ export const HA_ACTIVE = new Set(['on', 'open', 'opening', 'unlocked', 'playing'
 
 export function haState(e) {
   const s = e.state, dom = e.id.split('.')[0], dc = e.deviceClass;
-  if (s === 'unavailable' || s === 'unknown') return s === 'unknown' ? '—' : t('w.unavailable');
+  if (s === 'unavailable' || s === 'unknown') return s === 'unknown' ? '-' : t('w.unavailable');
   if (dom === 'binary_sensor') {
     const on = s === 'on';
     if (['door', 'window', 'garage_door', 'opening'].includes(dc)) return on ? 'Open' : 'Closed';
@@ -772,7 +772,7 @@ W.battery = {
     const dial = dialEl(), sub = h('div', 'g-sub');
     box.append(dial, h('div', 'g-label', 'PHONE'), sub);
     const load = every(20_000, () => {
-      if (!bridge) { dial.set(0, '—'); sub.textContent = 'Only on the phone'; return; }
+      if (!bridge) { dial.set(0, '-'); sub.textContent = 'Only on the phone'; return; }
       try {
         const b = JSON.parse(bridge.battery());
         box.style.setProperty('--q', b.plugged ? '#22c55e' : b.level <= 20 ? '#ef4444' : b.level <= 40 ? '#f59e0b' : '#84cc16');
@@ -872,7 +872,7 @@ W.quotaring = {
     const render = () => {
       const p = quotaProviders().find((x) => x.id === prov);
       const l = p?.limits?.[idx];
-      if (!l) { dial.set(0, '—'); label.textContent = `${st.logo} ${p?.name || prov}`; sub.textContent = D.quotas ? 'No data' : 'Waiting…'; return; }
+      if (!l) { dial.set(0, '-'); label.textContent = `${st.logo} ${p?.name || prov}`; sub.textContent = D.quotas ? 'No data' : 'Waiting…'; return; }
       const pace = paceInfo(l);
       dial.style.setProperty('--qc', l.percent >= 95 ? '#ef4444' : l.percent >= 80 ? '#f59e0b' : 'var(--q)');
       dial.set(l.percent, Math.round(l.percent), '%', pace?.elapsed);
@@ -888,7 +888,7 @@ W.volume = {
   needs: ['state'],
   create(box) {
     const fill = h('i'), bar = h('div', 'vb', fill), pct = h('div', 'vb-v', '--');
-    const mute = labelled(h('button', 'pb', icon('volume-x')), t('w.a.mute')), down = h('button', 'pb', '−'), up = h('button', 'pb', '+');
+    const mute = labelled(h('button', 'pb', icon('volume-x')), t('w.a.mute')), down = h('button', 'pb', '-'), up = h('button', 'pb', '+');
     box.append(h('div', 'w-title', en('Volume')), h('div', 'vb-row', bar, pct), h('div', 'pomo-btns', mute, down, up));
     let dragging = false, timer = 0, dragEndTimer = 0, level = 0;
     const vertical = () => box.clientHeight > box.clientWidth * 1.15;
@@ -968,7 +968,7 @@ W.chargecare = {
     const C = 2 * Math.PI * 42;
     box.innerHTML = '<div class="w-title">Battery care</div><div class="cc-body"><div class="cc-wrap"><svg viewBox="0 0 100 100" class="cc-ring">' +
       '<circle class="cc-bg" cx="50" cy="50" r="42"/><circle class="cc-band" cx="50" cy="50" r="42"/><circle class="cc-fg" cx="50" cy="50" r="42"/></svg>' +
-      '<b class="cc-pct">—</b></div></div><div class="cc-sub"><span class="cc-state"></span> <span class="cc-text"></span></div>';
+      '<b class="cc-pct">-</b></div></div><div class="cc-sub"><span class="cc-state"></span> <span class="cc-text"></span></div>';
     const q = (s) => box.querySelector(s);
     const load = every(15_000, () => {
       const ch = cfg.charge || {};
@@ -977,7 +977,7 @@ W.chargecare = {
       band.style.strokeDasharray = `${(C * (max - min)) / 100} ${C}`;
       band.style.strokeDashoffset = String((-C * min) / 100);
       band.style.opacity = ch.enabled ? '' : '0';
-      if (!bridge?.battery) { q('.cc-pct').textContent = '—'; q('.cc-text').textContent = 'Only on the phone'; return; }
+      if (!bridge?.battery) { q('.cc-pct').textContent = '-'; q('.cc-text').textContent = 'Only on the phone'; return; }
       let b;
       try { b = JSON.parse(bridge.battery()); } catch (_) { return; }
       if (!(b.level >= 0)) return;
@@ -1023,7 +1023,7 @@ W.nextup = {
         const sameDay = new Date(ev.start).toDateString() === new Date().toDateString();
         when.textContent = cur ? t('w.nowLeft', { dur }) : sameDay || left < 12 * 60 ? t('time.inDur', { dur }) : new Date(ev.start).toLocaleDateString(LOCALE, { weekday: 'long' });
         title.textContent = ev.title;
-        meta.textContent = [`${hm(ev.start)}–${hm(ev.end)}`, ev.location, cur && next ? `then ${next.title} at ${hm(next.start)}` : ''].filter(Boolean).join(' · ');
+        meta.textContent = [`${hm(ev.start)}-${hm(ev.end)}`, ev.location, cur && next ? `then ${next.title} at ${hm(next.start)}` : ''].filter(Boolean).join(' · ');
         if (cur) bar.style.width = Math.min(100, ((now - ev.start) / (ev.end - ev.start)) * 100) + '%';
         box.style.setProperty('--nu', ev.color || 'rgb(var(--ambient))');
       },
@@ -1068,7 +1068,7 @@ W.gpu = {
 
         const temps = [g.temp != null ? `${Math.round(g.temp)}°C` : null, g.hotSpot != null ? `hot spot ${Math.round(g.hotSpot)}°` : null,
           g.memTemp != null ? `memory ${Math.round(g.memTemp)}°` : null].filter(Boolean).join(' · ');
-        big.replaceChildren(h('b', null, g.util != null ? String(Math.round(g.util)) : '—'), h('small', null, '% load'), h('span', 'gd-temp', temps));
+        big.replaceChildren(h('b', null, g.util != null ? String(Math.round(g.util)) : '-'), h('small', null, '% load'), h('span', 'gd-temp', temps));
 
         const list = [];
         const mem = gpuMem(g);

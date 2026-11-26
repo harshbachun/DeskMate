@@ -10,11 +10,11 @@
   });
   const fonts = Object.freeze({
     default: '',
-    sans: 'Roboto, "Segoe UI", system-ui, sans-serif',
-    rounded: '"SF Pro Rounded", "Hiragino Maru Gothic ProN", Quicksand, Nunito, "Trebuchet MS", Roboto, system-ui, sans-serif',
-    condensed: '"Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif',
-    serif: 'Georgia, "Times New Roman", "Noto Serif", serif',
-    mono: '"Roboto Mono", "Cascadia Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+    sans: '"DM Digits", Roboto, "Segoe UI", system-ui, sans-serif',
+    rounded: '"DM Digits", "SF Pro Rounded", "Hiragino Maru Gothic ProN", Quicksand, Nunito, "Trebuchet MS", Roboto, system-ui, sans-serif',
+    condensed: '"DM Digits", "Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif',
+    serif: '"DM Digits", Georgia, "Times New Roman", "Noto Serif", serif',
+    mono: '"DM Digits", "Roboto Mono", "Cascadia Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
   });
   const limits = { radius: 32, gap: 24, padding: 24, pagePadding: 32 };
   const scaledSheets = new WeakSet();

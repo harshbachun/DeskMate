@@ -193,6 +193,7 @@ const hold = () => {
   const doc = iframe.contentDocument; if (!doc) return;
   apply();
   doc.body?.classList.remove('dimmed');
+  const night = doc.getElementById('night'); if (night) night.style.display = 'none'; // night mode would hide the card here
   const pager = doc.getElementById('pager');
   if ($('hold').checked && pager && pageIndex >= 0) {
     const left = pageIndex * pager.clientWidth;

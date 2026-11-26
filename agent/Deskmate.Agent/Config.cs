@@ -599,7 +599,7 @@ public sealed partial class ConfigStore(string path)
 
         // Pass 1: reserve every explicitly-provided id first. Otherwise a blank-id (brand-new) shortcut processed
         // earlier in the list than one that explicitly keeps an id could grab that id for itself, since at that
-        // point nothing yet says it is taken — bumping the one that actually owns it to an unrelated id instead.
+        // point nothing yet says it is taken - bumping the one that actually owns it to an unrelated id instead.
         var reserved = new Dictionary<Shortcut, string>();
         foreach (var s in c.Shortcuts.Where(s => !string.IsNullOrWhiteSpace(s.Id)))
         {

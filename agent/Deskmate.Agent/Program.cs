@@ -380,6 +380,8 @@ app.MapGet("/panel/{*file}", (string? file, HttpRequest req) =>
         ".js" => "text/javascript; charset=utf-8",
         ".css" => "text/css; charset=utf-8",
         ".svg" => "image/svg+xml",
+        ".woff2" => "font/woff2",
+        ".txt" => "text/plain; charset=utf-8",
         ".png" => "image/png",
         _ => "application/octet-stream",
     };

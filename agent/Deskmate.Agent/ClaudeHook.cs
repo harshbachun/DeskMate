@@ -105,7 +105,7 @@ public static class ClaudeHook
                     {
                         if (o.ValueKind != JsonValueKind.Object || Str(o, "label") is not { Length: > 0 } label) continue;
                         var d = Str(o, "description");
-                        sb.Append("\n  • ").Append(label).Append(d is { Length: > 0 } ? " — " + d : "");
+                        sb.Append("\n  • ").Append(label).Append(d is { Length: > 0 } ? " - " + d : "");
                     }
             }
         var s = sb.ToString();

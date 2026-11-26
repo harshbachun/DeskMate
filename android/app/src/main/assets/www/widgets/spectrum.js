@@ -1,5 +1,5 @@
 // Spectrum bars: a live spectrum analyzer of the sound the PC is playing (SpectrumAnalyzer.cs on the agent).
-// Frames arrive as "spectrum" stream events (~30 per second, 48 bands of 0–100); this widget merges them into its
+// Frames arrive as "spectrum" stream events (~30 per second, 48 bands of 0-100); this widget merges them into its
 // own number of bars and animates the fall and the peak caps itself, so it stays smooth between frames.
 import { W } from '../registry.js';
 import { h, api, D, emit, streaming, t, pages, curPage } from '../main.js';

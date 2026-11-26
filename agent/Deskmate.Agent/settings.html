@@ -17,7 +17,9 @@
     --accent: #2dd4bf; --accent-ink: #062b26; --shadow: none; color-scheme: dark; }
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 "Segoe UI", system-ui, sans-serif; }
+/* numbers in JetBrains Mono, like the panel (the font file is the panel's; digits only) */
+@font-face { font-family: "DM Digits"; src: url("/panel/jetbrains-mono.woff2") format("woff2"); font-weight: 100 800; font-display: block; unicode-range: U+0030-0039; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 "DM Digits", "Segoe UI", system-ui, sans-serif; }
 button, input, select, textarea { font: inherit; color: inherit; }
 header {
   position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 14px;
@@ -730,7 +732,7 @@ nav a.on::before { color: var(--accent); }
 
       <div class="card">
         <h3 data-i18n="s.pageSwitch.title">Page switching</h3>
-        <p class="hint" style="margin:0 0 12px" data-i18n="s.pageSwitch.lead">How rules, webhooks and the idle return change the page. Instead of jumping, the phone shows “Claude needs me — switching to AI in 3…” with Stay and Go now, then fades over. It never pulls a page away while you are using the panel, and rules that fire one after another wait their turn instead of bouncing the screen back and forth.</p>
+        <p class="hint" style="margin:0 0 12px" data-i18n="s.pageSwitch.lead">How rules, webhooks and the idle return change the page. Instead of jumping, the phone shows “Claude needs me - switching to AI in 3…” with Stay and Go now, then fades over. It never pulls a page away while you are using the panel, and rules that fire one after another wait their turn instead of bouncing the screen back and forth.</p>
         <div class="grid2">
           <div class="field"><label data-i18n="s.pageSwitch.homePage">Home page</label><select id="homePageSel" onchange="cfg.display.homePage = this.value || null; changed(); renderPageEditor()"></select>
             <span class="hint" data-i18n="s.pageSwitch.homePageHint">Where the idle return and the Back key go.</span></div>
@@ -840,7 +842,7 @@ nav a.on::before { color: var(--accent); }
           Windows Firewall asks once &mdash; allow it (tick the network type Tailscale uses, too).</p>
         <div class="grid2">
           <div class="field"><label data-i18n="s.wifi.port">Port</label><input type="number" min="1024" max="65535" data-bind="lan.port" data-type="int"></div>
-          <div class="field"><label data-i18n="s.wifi.addresses">Addresses offered to the phone</label><div id="lanHosts" class="hint">—</div></div>
+          <div class="field"><label data-i18n="s.wifi.addresses">Addresses offered to the phone</label><div id="lanHosts" class="hint">-</div></div>
         </div>
         <div class="row"><button class="btn primary" id="lanPair" data-i18n="s.wifi.pair">Pair a phone over Wi-Fi</button><button class="btn" id="lanRegen" data-i18n="s.wifi.newKey">New key (unpair phones)</button><span class="hint" id="lanStatus"></span></div>
       </div>
@@ -2091,7 +2093,7 @@ function pickFile() {
 function exportPages(pages, name) {
   const withCommands = pages.some((p) => (p.widgets || []).some((w) => w.type === 'command' || w.type === 'html'));
   download(name, { deskmate: 'pages', version: 1, exported: new Date().toISOString(), pages: JSON.parse(JSON.stringify(pages)) });
-  toast(withCommands ? 'Exported — it includes command / custom HTML widgets: check them before sharing' : 'Exported');
+  toast(withCommands ? 'Exported - it includes command / custom HTML widgets: check them before sharing' : 'Exported');
 }
 async function importPages() {
   const text = await pickFile();
@@ -2120,7 +2122,7 @@ async function importPages() {
   selPage = replace ? 0 : cfg.pages.length - clean.length;
   selWidget = -1;
   renderPages(); changed();
-  toast(`Imported ${clean.length} page(s)` + (dropped ? ` (${dropped} unknown widget(s) left out)` : '') + ' — remember to save');
+  toast(`Imported ${clean.length} page(s)` + (dropped ? ` (${dropped} unknown widget(s) left out)` : '') + ' - remember to save');
 }
 $('downloadJson').onclick = () => download('deskmate-settings', cfg);
 $('uploadJson').onclick = async () => {
@@ -2149,7 +2151,7 @@ $('installApp').onclick = async () => {
   try {
     const r = await fetch('/api/phone/install', { method: 'POST' });
     const j = await r.json().catch(() => ({}));
-    $('appMissingText').textContent = r.ok ? 'Installed — the panel opens in a few seconds' : (j.error || 'Could not install it');
+    $('appMissingText').textContent = r.ok ? 'Installed - the panel opens in a few seconds' : (j.error || 'Could not install it');
   } catch (_) { $('appMissingText').textContent = 'Could not install it'; }
   $('installApp').disabled = false;
   setTimeout(loadInfo, 4000);
@@ -2299,7 +2301,7 @@ const RULE_PRESETS = [
   ['👀 Review requested → work page', () => ({ name: 'Review requested', when: 'review-requested', then: 'goto', page: pageId('work', 'devops'), whileActive: false, priority: 2, cooldownMin: 30, days: 'mon,tue,wed,thu,fri', during: '09:00-18:00' })],
   ['❌ CI failed → notification', () => ({ name: 'CI failed', when: 'ci-failed', then: 'notify', text: '{detail}', level: 'error', whileActive: false })],
   ['🌅 Workday mornings → daily page', () => ({ name: 'Morning', when: 'always', during: '08:30-09:30', days: 'mon,tue,wed,thu,fri', then: 'goto', page: pageId('daily', 'home'), whileActive: true, priority: 2 })],
-  ['🔋 Mouse battery low', () => ({ name: 'Battery low', when: 'battery-low', value: 15, then: 'notify', text: '{detail} — time to charge', level: 'warn', whileActive: false, cooldownMin: 240 })],
+  ['🔋 Mouse battery low', () => ({ name: 'Battery low', when: 'battery-low', value: 15, then: 'notify', text: '{detail} - time to charge', level: 'warn', whileActive: false, cooldownMin: 240 })],
   ['🌡️ Too warm (webhook value)', () => ({ name: 'Too warm', when: 'push', match: 'temperature', op: '>', arg: '28', then: 'notify', text: 'It is {detail} °C', level: 'warn', whileActive: false, cooldownMin: 60 })],
   ['➕ Empty rule', () => ({ name: '', when: 'session-waiting', then: 'goto', page: pageId('home'), whileActive: true })],
 ];
@@ -2585,7 +2587,7 @@ function customIconField(s) {
 
   const preview = h('img', { class: 'custom-icon-preview', alt: '', onerror: () => (preview.style.visibility = 'hidden'), onload: () => (preview.style.visibility = 'visible') });
   // fetch(), not <img src>: an <img> whose request 404s (most shortcuts have no icon at all) logs a console error;
-  // fetch()'s own failure does not, and a plain 404 is not an error here — there may be nothing to show.
+  // fetch()'s own failure does not, and a plain 404 is not an error here - there may be nothing to show.
   let previewUrl = null;
   let refreshSeq = 0;
   const refresh = async () => {
@@ -2660,7 +2662,7 @@ function actionFields(s, upd, text, cmdIn, preset) {
       text('args', t('s.k.arguments'), osName === 'windows' ? t('s.k.argsPlaceholderWindows') : t('s.k.argsPlaceholderUnix')),
       text('cwd', t('s.k.workingFolder'), t('s.k.optional')));
   } else if (kind === 'keys') {
-    fields.push(text('args', t('s.k.keys'), 'e.g. ctrl+shift+m', 'Combine with +, several in a row with commas. Ctrl, Shift, Alt, Win (Cmd on a Mac), letters, digits, F1–F24, enter, tab, esc, space, arrows, home, end, pageup, pagedown, delete, numpad0–numpad9, numpadenter, numpadadd, numpadsubtract, numpadmultiply, numpaddivide, numpaddecimal, playpause, next, prev, mute, volumeup, volumedown.'));
+    fields.push(text('args', t('s.k.keys'), 'e.g. ctrl+shift+m', 'Combine with +, several in a row with commas. Ctrl, Shift, Alt, Win (Cmd on a Mac), letters, digits, F1-F24, enter, tab, esc, space, arrows, home, end, pageup, pagedown, delete, numpad0-numpad9, numpadenter, numpadadd, numpadsubtract, numpadmultiply, numpaddivide, numpaddecimal, playpause, next, prev, mute, volumeup, volumedown.'));
   } else if (kind === 'text') {
     fields.push(h('div', { class: 'field' }, h('label', {}, t('s.k.textToType')), area(s.args || '', 'Typed into whatever window has the focus', 3, (e) => upd('args', e.target.value, false))));
   } else {
@@ -2742,7 +2744,7 @@ function renderControlSettings() {
     btn(t('s.cd.disconnect'),async()=>{await request('spotify/disconnect');auth.textContent=t('s.cd.disconnected');}));
   root.append(spotify);
   const integration=h('details',{},h('summary',{},t('s.cd.audioInt')),field(t('s.cd.mixerExe'),c,'mixerExecutable'),field(t('s.cd.mixerDll'),c,'mixerLibrary'));root.append(integration);
-  const hintsRaw={shortcut:'Target: existing shortcut ID.',app:'Target: application shortcut ID.',macro:'Target: macro shortcut ID.',snippet:'Target: text shortcut ID.',meeting:'Target: meeting shortcut ID.',discord:'Target: Discord shortcut ID.',focus:'Target: work/focus macro shortcut ID.',project:'Target: folder/project shortcut ID.',keys:'Target: chord, e.g. Ctrl+Shift+M.',text:'Target: text to type.',task:'Target: executable shortcut ID. Output remains on the computer.',server:'Target: executable shortcut ID. Stop affects only the process started by this control.',sound:'Target: full sound file path. Device: output ID. Value: volume 0–100.',radio:'Target: direct HTTP(S) stream or Windows-only HLS (.m3u8) URL. Device: output ID. Value: volume 0–100.',playlist:'Target: spotify:playlist:… (also album, track or episode).',midi:'Target: hex MIDI bytes, e.g. B0 07 {value}. Device: numeric output port. Value: 0–127.',osc:'Target: OSC address, e.g. /volume. Device: host:port. Value: whole number (sent as an OSC float).',service:'Target: Windows service name. Argument: start, stop, restart.',workflow:'Target: owner/repo. Argument: workflow filename. Device: optional branch/ref.','window-layout':'Target: process name. Argument: left, right, center, max.','display-profile':'Target: monitor ID. Argument: JSON with width, height, hz, optional x/y.','audio-route':'Target: process.exe. Device: output ID. Requires SoundVolumeView.',mixer:'Target: Strip[0].Gain or Bus[0].Gain. Value: −60 to 12 dB.','mixer-mute':'Target: Strip[0].Mute (or supported toggle). Value: 0 or 1.',presentation:'Target: POWERPNT or soffice. Argument: start, next, prev, end, blank.'};
+  const hintsRaw={shortcut:'Target: existing shortcut ID.',app:'Target: application shortcut ID.',macro:'Target: macro shortcut ID.',snippet:'Target: text shortcut ID.',meeting:'Target: meeting shortcut ID.',discord:'Target: Discord shortcut ID.',focus:'Target: work/focus macro shortcut ID.',project:'Target: folder/project shortcut ID.',keys:'Target: chord, e.g. Ctrl+Shift+M.',text:'Target: text to type.',task:'Target: executable shortcut ID. Output remains on the computer.',server:'Target: executable shortcut ID. Stop affects only the process started by this control.',sound:'Target: full sound file path. Device: output ID. Value: volume 0-100.',radio:'Target: direct HTTP(S) stream or Windows-only HLS (.m3u8) URL. Device: output ID. Value: volume 0-100.',playlist:'Target: spotify:playlist:… (also album, track or episode).',midi:'Target: hex MIDI bytes, e.g. B0 07 {value}. Device: numeric output port. Value: 0-127.',osc:'Target: OSC address, e.g. /volume. Device: host:port. Value: whole number (sent as an OSC float).',service:'Target: Windows service name. Argument: start, stop, restart.',workflow:'Target: owner/repo. Argument: workflow filename. Device: optional branch/ref.','window-layout':'Target: process name. Argument: left, right, center, max.','display-profile':'Target: monitor ID. Argument: JSON with width, height, hz, optional x/y.','audio-route':'Target: process.exe. Device: output ID. Requires SoundVolumeView.',mixer:'Target: Strip[0].Gain or Bus[0].Gain. Value: -60 to 12 dB.','mixer-mute':'Target: Strip[0].Mute (or supported toggle). Value: 0 or 1.',presentation:'Target: POWERPNT or soffice. Argument: start, next, prev, end, blank.'};
   const hints = Object.fromEntries(Object.entries(hintsRaw).map(([k, v]) => [k, tl(v)]));
   const stationFilter = h('input', { type: 'search', placeholder: t('s.cd.filterStations'), style: { marginBottom: '6px' } });
   const stationList = h('div', { class: 'stack-list' });
@@ -2918,7 +2920,7 @@ function renderControlSettings() {
           if (added > 0) { changed(); renderActions(); }
           const msg = `Imported ${added} new station(s)`
             + (skipped ? ` (${skipped} already present)` : '')
-            + (capped ? ` — stopped at ${MAX_ACTIONS}-control limit (${capped} omitted)` : '')
+            + (capped ? ` - stopped at ${MAX_ACTIONS}-control limit (${capped} omitted)` : '')
             + '. Click Save to apply.';
           dirStatus.textContent = msg;
           toast(capped ? `Imported ${added} stations (${MAX_ACTIONS} limit reached)` : `Imported ${added} station(s)`);
@@ -2944,14 +2946,14 @@ function renderControlSettings() {
         dirStatus.textContent = `Checked ${results.length} stream(s): ${okCount} live, ${results.length - okCount} unreachable (no controls were modified).`;
         checkReport.textContent = radios.map((a) => {
           const st = byId.get(a.id);
-          return `${st?.ok ? '✓' : '✗'} ${a.label || a.id} — ${st?.status || 'Unknown'} (${a.target})`;
+          return `${st?.ok ? '✓' : '✗'} ${a.label || a.id} - ${st?.status || 'Unknown'} (${a.target})`;
         }).join('\n');
       })
     ),
     checkReport
   );
   root.append(radioDir);
-  root.append(h('details',{},h('summary',{},t('s.cd.availableShortcutIds')),h('p',{class:'hint'},t('s.cd.createShortcutsFirst')),...cfg.shortcuts.map(s=>h('div',{},s.id+' — '+s.label))));
+  root.append(h('details',{},h('summary',{},t('s.cd.availableShortcutIds')),h('p',{class:'hint'},t('s.cd.createShortcutsFirst')),...cfg.shortcuts.map(s=>h('div',{},s.id+' - '+s.label))));
   const profiles=h('div');root.append(h('h4',{},t('s.cd.profilesTitle')),profiles);
   const renderProfiles=()=>profiles.replaceChildren(...c.profiles.map(p=>{
     const box=h('details',{},h('summary',{},p.label || p.id));
@@ -3207,7 +3209,7 @@ async function loadInfo() {
     pill.querySelector('span').textContent = i.connected ? t('s.conn.connected') + (i.via ? ' · ' + i.via : '') : t('s.conn.notConnected');
     osName = i.os || 'windows';
     $('followComputerLockOption').style.display = osName === 'macos' ? '' : 'none';
-    $('adbFound').textContent = i.adb ? t('s.conn.adbFound', { path: i.adb }) : t('s.conn.adbNotFound') + ' — ' + ({ linux: 'sudo apt install adb', macos: 'brew install android-platform-tools' }[osName] || 'winget install Google.PlatformTools');
+    $('adbFound').textContent = i.adb ? t('s.conn.adbFound', { path: i.adb }) : t('s.conn.adbNotFound') + ' - ' + ({ linux: 'sudo apt install adb', macos: 'brew install android-platform-tools' }[osName] || 'winget install Google.PlatformTools');
     $('appMissing').hidden = !(i.appMissing && i.appMissing.length);
     $('usbProblem').hidden = !i.usbProblem;
     $('usbProblem').replaceChildren(...(i.usbProblem ? [icon('warn', 'm'), i.usbProblem] : []));
@@ -3238,13 +3240,13 @@ async function loadInfo() {
       h('dt', {}, 'Version'), h('dd', {}, i.version),
       h('dt', {}, t('s.adv.settingsFile')), h('dd', {}, h('code', {}, i.configPath)),
       h('dt', {}, t('s.adv.log')), h('dd', {}, h('code', {}, i.logPath)),
-      h('dt', {}, 'adb'), h('dd', {}, i.adb || '—'));
+      h('dt', {}, 'adb'), h('dd', {}, i.adb || '-'));
   } catch (_) {}
 }
 
 // ---------------------------------------------------------------- load / save
-// The form reads every section it binds and renders, so a config without one — an older export, or a
-// hand-trimmed paste in Apply JSON — gets the same defaults a fresh load does before anything renders.
+// The form reads every section it binds and renders, so a config without one - an older export, or a
+// hand-trimmed paste in Apply JSON - gets the same defaults a fresh load does before anything renders.
 function fillDefaults() {
   cfg.pages = fitPages(cfg.pages); cfg.shortcuts ??= []; cfg.rules ??= []; cfg.display ??= {}; cfg.night = { enabled: true, start: '00:30', end: '07:30', brightness: 0.02, ...cfg.night }; cfg.weather ??= {}; cfg.weather.unit ??= 'celsius'; cfg.weather.model ??= ''; cfg.photos ??= { folder: '', subfolders: true }; cfg.lan ??= { enabled: false, port: 8766 }; cfg.updates ??= { auto: false, repo: '' }; cfg.claude ??= { phoneApprovals: true, timeoutSec: 90, onlyWhenAway: false, shareSessionTitles: false, shareConversation: false };
   cfg.codexBar ??= { providers: ['claude', 'codex', 'antigravity'], rotate: true, pageSize: 2, rotateInterval: 8 };
@@ -3358,7 +3360,7 @@ function renderUpdate(u) {
   $('updInfo').replaceChildren(
     ...line(t('s.adv.agent'), s.agentVersion + (s.agentUpdate ? ` → ${s.latest}` : ' ' + t('s.adv.upToDate')) + (u.installed ? '' : ' · ' + t('s.adv.notInstalledCopy'))),
     ...line(t('s.adv.phoneApp'), s.appVersion ? s.appVersion + (s.appUpdate ? ` → ${s.latest} ` + t('s.adv.needsUsb') : ' ' + t('s.adv.upToDate')) : t('s.adv.notSeenYet')),
-    ...line(t('s.adv.latestRelease'), s.latest ? s.latest : '—'),
+    ...line(t('s.adv.latestRelease'), s.latest ? s.latest : '-'),
     ...line(t('s.adv.lastCheck'), s.lastCheck ? new Date(s.lastCheck).toLocaleString() : t('s.adv.notYet')));
   $('updApply').hidden = !(s.agentUpdate || s.appUpdate);
   // the same update, in the header: it is the one thing on this page that changes the agent itself
@@ -3407,14 +3409,14 @@ $('hookBtn').onclick = async () => {
   const remove = !!$('hookBtn').dataset.installed;
   const r = await fetch('/api/claude/hook', { method: remove ? 'DELETE' : 'POST' });
   const j = await r.json().catch(() => ({}));
-  r.ok ? toast(remove ? 'Hook removed' : 'Hook installed — new Claude Code sessions pick it up') : toast(j.error || 'Could not change the hook', true);
+  r.ok ? toast(remove ? 'Hook removed' : 'Hook installed - new Claude Code sessions pick it up') : toast(j.error || 'Could not change the hook', true);
   loadInfo();
 };
 $('modalClose').onclick = closeModal;
 $('lanPair').onclick = pairOverWifi;
 $('modal').onclick = (e) => { if (e.target.id === 'modal') closeModal(); };
 const whTry = (fn, ok) => async () => { try { await fn(); toast(ok); loadPushed(); } catch (e) { toast(e.message, true); } };
-$('whNotify').onclick = whTry(() => postJson('/api/notify', { title: 'Deskmate', text: 'Hello from the settings page', level: 'ok' }), 'Sent — look at the phone');
+$('whNotify').onclick = whTry(() => postJson('/api/notify', { title: 'Deskmate', text: 'Hello from the settings page', level: 'ok' }), 'Sent - look at the phone');
 $('whPush').onclick = whTry(() => postJson('/api/push/demo', { value: Math.round(Math.random() * 100), unit: '%', sub: 'sent ' + new Date().toLocaleTimeString() }), 'Pushed "demo"');
 $('whRefresh').onclick = whTry(() => postJson('/api/refresh'), 'The panel refreshes');
 $('whReload').onclick = whTry(() => postJson('/api/refresh?reload=1'), 'The panel reloads');

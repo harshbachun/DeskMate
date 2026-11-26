@@ -1,3 +1,7 @@
+/* Numbers everywhere: JetBrains Mono (from Google Fonts, SIL OFL 1.1, see JetBrainsMono-OFL.txt), bundled so it works offline.
+   It only covers the digits 0-9 and comes first in every font list, so letters keep their own font. */
+@font-face { font-family: "DM Digits"; src: url("jetbrains-mono.woff2") format("woff2"); font-weight: 100 800; font-style: normal;
+  font-display: block; unicode-range: U+0030-0039; }
 :root {
   --bg: #06080b;
   --card: rgba(255, 255, 255, 0.045);
@@ -36,7 +40,7 @@ html, body {
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: Roboto, "Segoe UI", system-ui, sans-serif;
+  font-family: "DM Digits", Roboto, "Segoe UI", system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
   -webkit-user-select: none;
   user-select: none;
@@ -659,8 +663,8 @@ html.beat-3 .sess.busy .st, html.beat-4 .sess.shell .st, html.beat-2 .sess.waiti
 /* ---------- command ---------- */
 .w-command { padding: 9px 12px; display: flex; flex-direction: column; gap: 3px; --c: #38bdf8; }
 .w-command.bad { --c: #f87171; }
-.cmd-o { flex: 1; min-height: 0; overflow: hidden; white-space: pre; font: 11.5px/1.35 "Roboto Mono", monospace; color: #d5dce5; }
-.cmd-o.big { display: flex; align-items: center; white-space: nowrap; font: 300 min(42cqh, 14cqw)/1 Roboto, sans-serif; letter-spacing: -0.02em; color: var(--text); }
+.cmd-o { flex: 1; min-height: 0; overflow: hidden; white-space: pre; font: 11.5px/1.35 "DM Digits", "Roboto Mono", monospace; color: #d5dce5; }
+.cmd-o.big { display: flex; align-items: center; white-space: nowrap; font: 300 min(42cqh, 14cqw)/1 "DM Digits", Roboto, sans-serif; letter-spacing: -0.02em; color: var(--text); }
 .w-command.bad .cmd-o { color: #fca5a5; }
 .cmd-f { font-size: 10.5px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @container (max-height: 70px) { .w-command .cmd-f { display: none; } }
@@ -669,7 +673,7 @@ html.beat-3 .sess.busy .st, html.beat-4 .sess.shell .st, html.beat-2 .sess.waiti
 .w-push { padding: 9px 12px; display: flex; flex-direction: column; gap: 3px; }
 .w-push .w-title { color: var(--c, var(--muted)); }
 .push-empty { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; color: var(--muted); font-size: 12px; }
-.push-empty code { font: 10.5px "Roboto Mono", monospace; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.push-empty code { font: 10.5px "DM Digits", "Roboto Mono", monospace; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .push-big { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .pv { font-size: min(42cqh, 20cqw); font-weight: 400; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--c, var(--text)); }
 .pv small { font-size: .45em; color: var(--muted); margin-left: 3px; }
@@ -1010,7 +1014,7 @@ html.beat-4 .w-onair.on .oa-sign { box-shadow: 0 0 34px rgba(239, 68, 68, .9); }
 .ap-desc { font-size: 13px; color: var(--muted); }
 .ap-desc:empty { display: none; }
 .ap-detail { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 10px 12px; border-radius: 12px; background: #06080b; border: 1px solid var(--line);
-  font: 12.5px/1.45 "Roboto Mono", monospace; color: #d5dce5; white-space: pre-wrap; word-break: break-word; touch-action: pan-y; -webkit-user-select: text; user-select: text; }
+  font: 12.5px/1.45 "DM Digits", "Roboto Mono", monospace; color: #d5dce5; white-space: pre-wrap; word-break: break-word; touch-action: pan-y; -webkit-user-select: text; user-select: text; }
 .ap-foot { display: flex; align-items: center; gap: 12px; }
 .ap-time { flex: 1; font-size: 12px; color: var(--dim); }
 .ap-btn { min-width: 150px; padding: 14px 22px; border-radius: 14px; font-size: 17px; font-weight: 700; }
@@ -1292,7 +1296,7 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
   --dc-panel: #111214; --dc-raised: #1e1f22; --dc-tile: #232428; --dc-line: rgba(255, 255, 255, .06);
   --dc-text: #f2f3f5; --dc-muted: #949ba4; --dc-green: #23a55a; --dc-red: #f23f43; --dc-hang: #da373c; --dc-blurple: #5865f2;
   height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 34%); gap: 8px; color: var(--dc-text);
-  font-family: "gg sans", "Noto Sans", Roboto, system-ui, sans-serif;
+  font-family: "DM Digits", "gg sans", "Noto Sans", Roboto, system-ui, sans-serif;
 }
 .dcp-i { display: inline-flex; width: 1em; height: 1em; flex: none; }
 .dcp-i svg { width: 100%; height: 100%; display: block; }

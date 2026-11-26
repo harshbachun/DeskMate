@@ -280,7 +280,7 @@ W.valorant = {
         return;
       }
       mLine1.textContent = [p.mode, p.map].filter(Boolean).join(' · ') || 'VALORANT';
-      const score = p.ally != null && p.enemy != null ? ` · ${p.ally}–${p.enemy}` : '';
+      const score = p.ally != null && p.enemy != null ? ` · ${p.ally}-${p.enemy}` : '';
       mLine2.textContent = p.status + score;
     };
     const renderStats = () => {
@@ -295,7 +295,7 @@ W.valorant = {
       const last = st.last, today = st.today;
       if (last) {
         const res = last.won === true ? 'Win' : last.won === false ? 'Loss' : 'Draw';
-        const rounds = last.roundsWon != null && last.roundsLost != null ? ` ${last.roundsWon}–${last.roundsLost}` : '';
+        const rounds = last.roundsWon != null && last.roundsLost != null ? ` ${last.roundsWon}-${last.roundsLost}` : '';
         statsBody.append(h('div', 'vl-last',
           h('div', 'vl-last-head', h('b', 'vl-res ' + res.toLowerCase(), res + rounds), h('span', null, [last.mode, last.map, last.agent].filter(Boolean).join(' · '))),
           h('div', 'vl-kvs',
@@ -304,7 +304,7 @@ W.valorant = {
             h('div', 'vl-kv big', h('small', null, 'K/D'), h('b', null, last.deathless ? `${last.kd} (no deaths)` : last.kd.toFixed(2))))));
       } else statsBody.append(h('div', 'vl-empty', 'No finished match found yet'));
       statsBody.append(h('div', 'vl-today', h('small', null, `Today (${today.date})`),
-        h('b', null, `${today.wins} W – ${today.losses} L`), today.draws ? h('small', null, ` · ${today.draws} draw${today.draws > 1 ? 's' : ''}`) : null));
+        h('b', null, `${today.wins} W - ${today.losses} L`), today.draws ? h('small', null, ` · ${today.draws} draw${today.draws > 1 ? 's' : ''}`) : null));
       if (st.error) statsBody.append(h('div', 'vl-note warn', st.error));
       else if (st.updatedAt) statsBody.append(h('div', 'vl-note', `Match history checked ${mmss(Date.now() - st.updatedAt)} ago · ${st.account || ''}`));
     };

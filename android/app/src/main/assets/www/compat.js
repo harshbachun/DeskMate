@@ -4,7 +4,7 @@
 // Note 7 are stuck on (the system WebView cannot always be updated there). Without these the module throws on the
 // first call and the whole panel stays black. Loaded as a classic script before i18n.js and main.js.
 (function () {
-  // Element.replaceChildren — Chromium 86. Used all over the panel's render paths.
+  // Element.replaceChildren - Chromium 86. Used all over the panel's render paths.
   var proto = window.Element && window.Element.prototype;
   if (proto && typeof proto.replaceChildren !== 'function') {
     var replaceChildren = function () {
@@ -18,7 +18,7 @@
     });
   }
 
-  // Array.prototype.at — Chromium 92.
+  // Array.prototype.at - Chromium 92.
   if (!Array.prototype.at) {
     Array.prototype.at = function (index) {
       var length = this.length >>> 0;
@@ -28,7 +28,7 @@
     };
   }
 
-  // String.prototype.replaceAll — Chromium 85.
+  // String.prototype.replaceAll - Chromium 85.
   if (!String.prototype.replaceAll) {
     String.prototype.replaceAll = function (search, replacement) {
       if (search instanceof RegExp) {

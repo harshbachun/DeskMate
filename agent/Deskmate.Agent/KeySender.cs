@@ -18,7 +18,7 @@ public static class KeySender
     /// </summary>
     internal const string AccessibilityHint =
         "macOS refused: allow DeskmateAgent in System Settings › Privacy & Security › Accessibility. " +
-        "If it is already listed, remove it there with − and add it again";
+        "If it is already listed, remove it there with - and add it again";
 
     internal record struct MouseCall(string Action, int Dx, int Dy, int Delta);
     internal static Action<MouseCall>? TestMouseSink;

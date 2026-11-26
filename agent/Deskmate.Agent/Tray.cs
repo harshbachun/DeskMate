@@ -82,7 +82,7 @@ public sealed class Tray : IHostedService
         _icon.DoubleClick += (_, _) => OpenUrl(SettingsUrl);
         _adb.StateChanged += () =>
         {
-            try { host.BeginInvoke(() => _icon.Text = _adb.Connected ? "Deskmate — phone connected" : "Deskmate — waiting for phone"); } catch { }
+            try { host.BeginInvoke(() => _icon.Text = _adb.Connected ? "Deskmate - phone connected" : "Deskmate - waiting for phone"); } catch { }
         };
 
         // first run: offer the CPU temperature setup once (it needs an administrator prompt, so it is never silent)

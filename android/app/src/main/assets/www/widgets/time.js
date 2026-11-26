@@ -122,7 +122,7 @@ W.timer = {
         toast('Time is up', 'ok', '⏳ ' + (o.label || 'Timer'), 6);
       }
       const left = remaining();
-      dial.set(st.total ? 100 * (left / st.total) : 0, st.total ? fmtTime(left + 999) : '—');
+      dial.set(st.total ? 100 * (left / st.total) : 0, st.total ? fmtTime(left + 999) : '-');
       box.classList.toggle('run', !!st.endsAt);
     };
     renderBtns();
@@ -136,7 +136,7 @@ W.counter = {
     const key = `ct:${page.id}/${w.id}`;
     let st = store.get(key, null) || { n: 0, day: new Date().toDateString() };
     const step = Number(o.step) || 1;
-    const num = h('div', 'ct-n'), minus = h('button', 'pb', '−'), plus = h('button', 'pb main', '+'), reset = h('button', 'mini-btn', 'Reset');
+    const num = h('div', 'ct-n'), minus = h('button', 'pb', '-'), plus = h('button', 'pb main', '+'), reset = h('button', 'mini-btn', 'Reset');
     box.style.setProperty('--q', o.color || '#a78bfa');
     box.append(h('div', 'w-title', o.label || en('Counter'), reset), num, h('div', 'pomo-btns', minus, plus));
     // "Start from zero every day" also when the panel stays open over midnight (it is never rebuilt then)
@@ -209,7 +209,7 @@ export const QUOTES = [
 W.quote = {
   needs: ['tick'],
   create(box, { o }) {
-    const custom = lines(o.quotes, []).map((l) => { const i = l.lastIndexOf(' — '); return i > 0 ? [l.slice(0, i), l.slice(i + 3)] : [l, '']; });
+    const custom = lines(o.quotes, []).map((l) => { const i = Math.max(l.lastIndexOf(' ' + String.fromCharCode(0x2014) + ' '), l.lastIndexOf(' - ')) /* saved quotes may still use an em dash */; return i > 0 ? [l.slice(0, i), l.slice(i + 3)] : [l, '']; });
     const list = custom.length ? custom : QUOTES;
     const mins = Math.max(1, Number(o.minutes) || 30);
     const q = h('div', 'qt-q'), a = h('div', 'qt-a');
@@ -220,7 +220,7 @@ W.quote = {
       if (idx === shown) return;
       shown = idx;
       q.textContent = list[idx][0];
-      a.textContent = list[idx][1] ? '— ' + list[idx][1] : '';
+      a.textContent = list[idx][1] ? '- ' + list[idx][1] : '';
       box.style.setProperty('--qf', list[idx][0].length < 40 ? 1.25 : list[idx][0].length < 80 ? 1 : 0.8);
     };
     box.addEventListener('click', () => { haptic(); offset++; pick(); });

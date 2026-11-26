@@ -8,7 +8,7 @@ public sealed record CalendarEvent(string Title, long Start, long End, bool AllD
 public sealed record CalendarSnapshot(IReadOnlyList<CalendarEvent> Events, long Updated, IReadOnlyList<string> Errors);
 
 /// <summary>
-/// Upcoming events from iCalendar (ICS) feeds — Google's "secret address in iCal format", Outlook's published
+/// Upcoming events from iCalendar (ICS) feeds - Google's "secret address in iCal format", Outlook's published
 /// calendar link, iCloud public calendars, any CalDAV server's export. Fetched every 10 minutes; the URLs stay on
 /// this computer (they are secrets), the phone only gets the events of the next two weeks.
 /// Recurring events are expanded for the usual rules (daily / weekly / monthly / yearly, INTERVAL, COUNT, UNTIL,
@@ -414,7 +414,7 @@ public static class Ics
 
     private static Prop? ParseLine(string line)
     {
-        // NAME;PARAM=VALUE;PARAM="VA:LUE":value — the first colon outside quotes ends the name part
+        // NAME;PARAM=VALUE;PARAM="VA:LUE":value - the first colon outside quotes ends the name part
         var quoted = false;
         var colon = -1;
         for (var i = 0; i < line.Length; i++)
