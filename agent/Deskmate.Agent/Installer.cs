@@ -38,15 +38,19 @@ internal static class Installer
                     : $"Replace Deskmate {installed} with {AppPaths.Version}?";
                 if (MessageBox.Show(question + "\n\nDeskmate will close and start again; your settings are kept.", "Deskmate",
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
-                StopRunningAgents();
-                // the sensor reader may still be running from the old file (elevated, so it can't be closed from
-                // here); Windows lets a running exe be renamed, and the agent deletes *.old files later
+                // Windows lets a running exe be renamed, so the old file moves aside first (the agent deletes *.old
+                // files later). An earlier .old may still be in use by the elevated sensor reader: then a new name.
                 var old = Target + ".old";
                 try { File.Delete(old); } catch { }
+                if (File.Exists(old)) old = $"{Target}.{DateTime.Now:yyyyMMddHHmmss}.old";
                 File.Move(Target, old);
+                try { File.Copy(source, Target); }
+                catch { File.Move(old, Target); throw; } // put the old one back: the running agent keeps working
+                // only now, with the new file in place, the running agent is closed
+                StopRunningAgents();
             }
             Directory.CreateDirectory(AppPaths.InstallDir);
-            File.Copy(source, Target, true);
+            if (firstInstall) File.Copy(source, Target, true);
             if (firstInstall)
             {
                 Shortcut(StartMenuShortcut);
@@ -76,7 +80,9 @@ internal static class Installer
                 if (p.Id == Environment.ProcessId) continue;
                 try
                 {
-                    if (!string.Equals(p.MainModule?.FileName, Target, StringComparison.OrdinalIgnoreCase)) continue;
+                    // its file was just renamed to *.old, so match the install folder rather than the exact name
+                    var file = p.MainModule?.FileName;
+                    if (file is null || !string.Equals(Path.GetDirectoryName(file), Path.GetFullPath(AppPaths.InstallDir).TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)) continue;
                     p.Kill();
                     p.WaitForExit(10_000);
                 }

@@ -102,8 +102,8 @@ W.valorant = {
     match.addEventListener('click', () => { const m = data?.presence?.map; if (m && data.presence.mapImage) openMapViewer(m); });
 
     // ---- 2. controls --------------------------------------------------------------------------------------------
-    const clipLabel = h('b', null, 'Save clip'), clipSub = h('small', null, 'F10');
-    const clipBtn = labelled(h('button', 'vl-btn vl-clip', SVG(ICON.clip), clipLabel, clipSub), 'Save clip: press the Medal hotkey');
+    const clipLabel = h('b', null, 'Save clip'), clipSub = h('small', null, '');
+    const clipBtn = labelled(h('button', 'vl-btn vl-clip', SVG(ICON.clip), clipLabel, clipSub), 'Save clip: press your clip app's hotkey');
     const talkLabel = h('b', null, 'Hold to talk'), talkSub = h('small', null, '');
     const talkBtn = labelled(h('button', 'vl-btn vl-talk', SVG(ICON.talk), talkLabel, talkSub), 'Hold to talk in team voice');
     const muteIcon = h('span', 'vl-mute-icon', SVG(ICON.mic));
@@ -308,7 +308,14 @@ W.valorant = {
       if (st.error) statsBody.append(h('div', 'vl-note warn', st.error));
       else if (st.updatedAt) statsBody.append(h('div', 'vl-note', `Match history checked ${mmss(Date.now() - st.updatedAt)} ago · ${st.account || ''}`));
     };
-    const render = () => { renderMatch(); renderTalk(); renderMute(); renderStats(); clipSub.textContent = (data?.clip?.key || 'f10').toUpperCase() + ' · Medal'; };
+    const render = () => { renderMatch(); renderTalk(); renderMute(); renderStats(); renderClip(); };
+    // Save clip shows the clip app's key and name; with no key set, the button goes and the other two share its room
+    const renderClip = () => {
+      const key = data?.clip?.key ?? '', app = data?.clip?.app ?? '';
+      clipBtn.hidden = !key;
+      controls.classList.toggle('vl-noclip', !key);
+      clipSub.textContent = [key.toUpperCase(), app].filter(Boolean).join(' · ');
+    };
 
     render();
     return {

@@ -17,8 +17,11 @@ public sealed class ValorantConfig
     /// <summary>Switch the phone to <see cref="Page"/> when the game starts and back home when it exits.</summary>
     public bool AutoPage { get; set; } = true;
     public string Page { get; set; } = "valorant";
-    /// <summary>Medal's "save clip" hotkey (KeySender syntax, e.g. "f10" or "ctrl+f10"); pressed once per tap.</summary>
-    public string ClipKey { get; set; } = "f10";
+    /// <summary>The clip app's "save clip" hotkey (KeySender syntax, e.g. "f10" or "alt+f10"), pressed once per tap;
+    /// empty = no Save clip button. Default: Xbox Game Bar's "Record that", which every Windows PC has.</summary>
+    public string ClipKey { get; set; } = "win+alt+g";
+    /// <summary>Name of the clip app, shown under the button (Medal, NVIDIA, Xbox Game Bar …); empty = only the key.</summary>
+    public string ClipApp { get; set; } = "Xbox Game Bar";
     /// <summary>Valorant's team voice key, held down while the phone's Talk button is held. One key, no modifiers.</summary>
     public string TalkKey { get; set; } = "v";
     /// <summary>Microphone the mute toggle controls: empty = the Windows default recording device, else part of its name.</summary>
@@ -36,7 +39,8 @@ public sealed class ValorantConfig
     {
         static string Clean(string? s, int max) => (s ?? "").Trim() is var t && t.Length <= max && t.All(c => c >= ' ') ? t : "";
         Page = Clean(Page, 64) is { Length: > 0 } p ? p : "valorant";
-        ClipKey = Clean(ClipKey, 40).ToLowerInvariant() is { Length: > 0 } c ? c : "f10";
+        ClipKey = Clean(ClipKey, 40).ToLowerInvariant();
+        ClipApp = Clean(ClipApp, 40);
         TalkKey = Clean(TalkKey, 20).ToLowerInvariant() is { Length: > 0 } k ? k : "v";
         MicDevice = Clean(MicDevice, 200);
         PingHost = Clean(PingHost, 253);
@@ -52,7 +56,7 @@ public sealed record ValorantMatch(string Id, long StartedAt, string? Map, strin
 
 /// <summary>
 /// The Valorant page's computer side (A52 fork): notices the game process and switches the phone's page on start / exit,
-/// reads your own presence from the Riot Client's local API, presses Medal's clip hotkey, holds the team-voice key only
+/// reads your own presence from the Riot Client's local API, presses your clip app's hotkey, holds the team-voice key only
 /// while a phone holds a lease and Valorant is in front, toggles the game microphone, probes a host for latency and fetches
 /// finished matches from the HenrikDev API. It never reads game memory and never presses gameplay keys.
 /// </summary>
@@ -109,6 +113,8 @@ public sealed partial class ValorantHost(ConfigStore config, PushStore push, ILo
         if (running) Interlocked.Exchange(ref _statsDueAt, Environment.TickCount64 + 5_000);
         var cfg = config.Get().Valorant;
         if (!cfg.AutoPage) return;
+        // the page switched off (or deleted) in the layout: the game neither opens it nor sends the phone home
+        if (!config.Get().Pages.Any(p => p.Id == cfg.Page && p.Enabled)) return;
         Navigate(running ? cfg.Page : HomePage(), running ? "VALORANT started" : "VALORANT closed");
     }
 
@@ -340,7 +346,7 @@ public sealed partial class ValorantHost(ConfigStore config, PushStore push, ILo
     };
     internal static string? ModeName(string? queue) => string.IsNullOrWhiteSpace(queue) ? null : Modes.TryGetValue(queue, out var m) ? m : queue;
 
-    // ------------------------------------------------------------------ clip (Medal hotkey)
+    // ------------------------------------------------------------------ clip (the clip app's hotkey)
     private string? _lastTap;
     private long _lastTapAt;
     internal Func<List<string>, bool> Press = KeySender.SendCombo; // the tests count presses
@@ -355,6 +361,7 @@ public sealed partial class ValorantHost(ConfigStore config, PushStore push, ILo
             if (tap is { Length: > 0 } && tap == _lastTap && now - _lastTapAt < 10_000) return new { sent = true, duplicate = true, key };
             _lastTap = tap; _lastTapAt = now;
         }
+        if (key.Length == 0) return new { sent = false, error = "No clip key is set (Settings › VALORANT)", key };
         var combos = KeySender.Parse(key);
         if (combos.Count != 1) return new { sent = false, error = $"Clip key \"{key}\" is not one key combination", key };
         var ok = Press(combos[0]);
@@ -822,7 +829,7 @@ public sealed partial class ValorantHost(ConfigStore config, PushStore push, ILo
             presenceError = running ? presErr : null,
             mic = new { mic.Available, mic.Muted, mic.Name, mic.Error },
             talk = new { key = cfg.TalkKey, held, down, reason },
-            clip = new { key = cfg.ClipKey },
+            clip = new { key = cfg.ClipKey, app = cfg.ClipApp },
             ping = PingSnapshot(),
             stats = StatsSnapshot(),
         };

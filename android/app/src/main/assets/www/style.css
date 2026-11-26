@@ -1465,6 +1465,8 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 
 /* 2 · controls fill the rest of the first screen; Talk is the biggest and sits by the right thumb */
 .vl-controls { flex: none; height: calc(100cqh - var(--vl-top-cur) - 8px - var(--vl-peek)); min-height: var(--vl-btn-min); display: grid; grid-template-columns: .8fr 1fr 1.35fr; gap: 8px; }
+.vl-controls.vl-noclip { grid-template-columns: .8fr 2.35fr; }
+.vl-btn[hidden] { display: none; }
 .vl-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border-radius: 18px; border: 1px solid var(--vl-line);
   background: var(--vl-panel); color: var(--vl-ink); font: inherit; text-align: center; padding: 10px; touch-action: pan-x pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; min-width: 0; }
 .vl-btn .vl-i, .vl-btn .vl-mute-icon { font-size: 40px; }

@@ -583,7 +583,18 @@ nav a.on::before { color: var(--accent); }
         <div class="row" style="margin-bottom:8px"><label class="switch"><input type="checkbox" data-bind="valorant.autoPage"><span></span></label> <span>Open the VALORANT page when the game starts, go back home when it exits</span></div>
         <div class="row" style="gap:10px">
           <div class="field" style="flex:1"><label>Page id</label><input type="text" data-bind="valorant.page" spellcheck="false" autocomplete="off"></div>
-          <div class="field" style="flex:1"><label>Medal clip hotkey</label><input type="text" data-bind="valorant.clipKey" placeholder="f10" spellcheck="false" autocomplete="off"></div>
+          <div class="field" style="flex:1"><label>Clip app (Save clip button)</label><select id="vlClipPreset">
+            <option value="Xbox Game Bar|win+alt+g">Xbox Game Bar (Win+Alt+G)</option>
+            <option value="Medal|f10">Medal (F10)</option>
+            <option value="NVIDIA|alt+f10">NVIDIA App / ShadowPlay (Alt+F10)</option>
+            <option value="AMD|ctrl+shift+s">AMD Adrenalin (Ctrl+Shift+S)</option>
+            <option value="OBS|">OBS replay buffer (enter your OBS hotkey)</option>
+            <option value="custom">Other app / custom key</option>
+            <option value="|">Off (no Save clip button)</option></select></div>
+          <div class="field" style="flex:1"><label>Clip app name</label><input type="text" id="vlClipApp" data-bind="valorant.clipApp" placeholder="e.g. Medal" spellcheck="false" autocomplete="off"></div>
+          <div class="field" style="flex:1"><label>Clip hotkey (empty = off)</label><input type="text" id="vlClipKey" data-bind="valorant.clipKey" placeholder="e.g. f10, alt+f10" spellcheck="false" autocomplete="off"></div>
+        </div>
+        <div class="row" style="gap:10px">
           <div class="field" style="flex:1"><label>Team voice key (held)</label><input type="text" data-bind="valorant.talkKey" placeholder="v" spellcheck="false" autocomplete="off"></div>
         </div>
         <div class="field"><label>Microphone for the mute toggle (empty = the Windows default recording device, else part of its name)</label>
@@ -3133,6 +3144,7 @@ function bindForm() {
     };
   });
   bindCodexBar();
+  syncClipPreset();
   $('nbv').textContent = Math.round(cfg.night.brightness * 100) + '%';
 }
 
@@ -3312,6 +3324,19 @@ $('openPhone').onclick = async () => {
   } else toast(t('s.js.openingPanel'));
 };
 $('cityBtn').onclick = searchCity;
+// VALORANT › clip app: a preset fills the name and key; editing them by hand shows "custom"
+function syncClipPreset() {
+  const v = `${$('vlClipApp').value}|${$('vlClipKey').value}`, sel = $('vlClipPreset');
+  sel.value = [...sel.options].some((o) => o.value === v) ? v : 'custom';
+}
+$('vlClipPreset').onchange = () => {
+  const v = $('vlClipPreset').value;
+  if (v === 'custom') return;
+  const [app, key] = v.split('|');
+  for (const [id, val] of [['vlClipApp', app], ['vlClipKey', key]]) { $(id).value = val; $(id).dispatchEvent(new Event('input')); }
+  if (app === 'OBS') $('vlClipKey').focus();
+};
+['vlClipApp', 'vlClipKey'].forEach((id) => $(id).addEventListener('input', syncClipPreset));
 async function renderSensors() {
   try {
     const s = await (await fetch('/api/sensors')).json();
