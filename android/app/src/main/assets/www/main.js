@@ -1515,10 +1515,13 @@ export function requestBack(rule) {
   soon();
 }
 
+/** Widgets that keep their page from going home while it's on screen (each returns true to stay), e.g. VALORANT mid-game. */
+export const stayPut = new Set();
 /** Seconds of no touch after which this page goes home (0 = stay). */
 const idleLimit = () => pages[curPage]?.idleSec ?? dsp().idleReturnSec ?? 90;
 function idleDue() {
   if (pagePaused) return false;
+  for (const stay of stayPut) { try { if (stay()) return false; } catch (_) {} }
   const idle = idleLimit();
   if (!(idle > 0)) return false;
   const maxHold = (dsp().holdMaxMin ?? 30) * 60_000;

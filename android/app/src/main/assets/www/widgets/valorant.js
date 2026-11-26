@@ -1,4 +1,4 @@
-import { API, PANEL_HEADERS, api, h, haptic, labelled, toast } from '../main.js';
+import { API, PANEL_HEADERS, api, h, haptic, labelled, stayPut, toast } from '../main.js';
 import { W } from '../registry.js';
 import { every } from './helpers.js';
 import { valorantMark, valorantWordmark } from './valorant-logo.js';
@@ -205,6 +205,12 @@ W.valorant = {
     // swiping to another page moves this one off screen: let go
     const seen = new IntersectionObserver((entries) => { if (entries.some((x) => !x.isIntersecting)) talkUp(); }, { threshold: 0 });
     seen.observe(box);
+    // while VALORANT runs and this page is the one on screen, the panel doesn't idle back to Home
+    let onScreen = false;
+    const shown = new IntersectionObserver((entries) => { onScreen = entries[entries.length - 1].intersectionRatio >= 0.5; }, { threshold: [0, 0.5, 1] });
+    shown.observe(box);
+    const stay = () => onScreen && !!data?.game?.running;
+    stayPut.add(stay);
 
     // ---- Mic mute: the PC's real state, including changes made there ---------------------------------------------------
     let muteBusy = false;
@@ -307,7 +313,7 @@ W.valorant = {
     render();
     return {
       update(kind) { if (kind === 'tick') poll(); renderMatch(); },
-      destroy() { talkUp(); seen.disconnect(); document.removeEventListener('visibilitychange', onHide); window.removeEventListener('blur', talkUp); window.removeEventListener('vl-demo', load); },
+      destroy() { talkUp(); seen.disconnect(); shown.disconnect(); stayPut.delete(stay); document.removeEventListener('visibilitychange', onHide); window.removeEventListener('blur', talkUp); window.removeEventListener('vl-demo', load); },
     };
   },
 };

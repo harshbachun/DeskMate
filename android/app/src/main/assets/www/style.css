@@ -1399,13 +1399,13 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
   --vl-grad-clear: 92%;     /* …and fully transparent from here to the left edge */
   --vl-map-w: 62%;          /* the map image covers this much of the card, from the left */
   --vl-map-x: 50%; --vl-map-y: 50%; /* which part of the map image shows */
-  --vl-map-bright: 0.95;    /* map image brightness */
+  --vl-map-bright: 1;    /* map image brightness */
   --vl-text-w: 42%;         /* width of the text column on the right, over the map */
   --vl-word-h: 10px;        /* VALORANT wordmark height */
   --vl-tile: 87px;          /* the square behind the V mark */
   --vl-tile-x: 0px;         /* moves the square right (or left, negative) */
-  --vl-tile-tint: 0.82;     /* over the map: how opaque the square's #0e1822 is */
-  --vl-tile-blur: 0px;      /* over the map: blur of the map behind the square */
+  --vl-tile-tint: 0.68;     /* over the map: how opaque the square's #0e1822 is */
+  --vl-tile-blur: 5px;      /* over the map: blur of the map behind the square */
   --vl-mark-h: 45px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
   /* not running: its own sizes */
