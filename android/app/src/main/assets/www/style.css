@@ -1392,18 +1392,18 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
    overrides them on :root while you adjust. */
 :root {
   --vl-top-h: 130px;        /* match card while VALORANT runs */
-  --vl-top-off-h: 60px;     /* match card while it does not (one line) */
+  --vl-top-off-h: 85px;     /* match card while it does not (one line) */
   --vl-peek: 16px;          /* how much of the stats card shows under the buttons */
   --vl-btn-min: 120px;      /* the buttons never get shorter than this */
   --vl-grad-solid: 41%;     /* #0e1822 is solid from the right edge to here… */
   --vl-grad-clear: 92%;     /* …and fully transparent from here to the left edge */
-  --vl-map-w: 70%;          /* the map image covers this much of the card, from the left */
+  --vl-map-w: 62%;          /* the map image covers this much of the card, from the left */
   --vl-map-x: 50%; --vl-map-y: 50%; /* which part of the map image shows */
   --vl-map-bright: 0.95;    /* map image brightness */
   --vl-text-w: 42%;         /* width of the text column on the right, over the map */
   --vl-word-h: 10px;        /* VALORANT wordmark height */
-  --vl-tile: 48px;          /* the square behind the V mark */
-  --vl-mark-h: 29px;        /* V mark height, inside the square */
+  --vl-tile: 87px;          /* the square behind the V mark */
+  --vl-mark-h: 45px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
 }
 .vl-box { --vl-top-cur: var(--vl-top-h); }
