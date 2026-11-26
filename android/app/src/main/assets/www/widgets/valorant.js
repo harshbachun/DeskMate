@@ -90,7 +90,7 @@ W.valorant = {
     // The map image fills the card's background; a #0e1822 gradient from the right keeps the text readable.
     // Sizes and the gradient are CSS variables (--vl-*, see style.css), tuned in valorant-preview.html.
     const mapBg = h('div', 'vl-map-bg'), shade = h('div', 'vl-shade');
-    const mark = svgSpan('vl-mark', valorantMark);
+    const mark = h('span', 'vl-tile', svgSpan('vl-mark', valorantMark)); // the square V, always on the left
     const brand = svgSpan('vl-brand', valorantWordmark);
     const mLine1 = h('div', 'vl-m1'), mLine2 = h('div', 'vl-m2');
     const partyCount = h('span'), elapsed = h('span');

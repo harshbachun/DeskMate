@@ -1391,17 +1391,19 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 /* 1 · match status. Tunable in valorant-preview.html: these defaults are the release values, and the preview
    overrides them on :root while you adjust. */
 :root {
-  --vl-top-h: 132px;        /* match card while VALORANT runs */
-  --vl-top-off-h: 46px;     /* match card while it does not (one line) */
+  --vl-top-h: 130px;        /* match card while VALORANT runs */
+  --vl-top-off-h: 60px;     /* match card while it does not (one line) */
   --vl-peek: 16px;          /* how much of the stats card shows under the buttons */
   --vl-btn-min: 120px;      /* the buttons never get shorter than this */
-  --vl-grad-solid: 40%;     /* #0e1822 is solid from the right edge to here… */
-  --vl-grad-clear: 85%;     /* …and fully transparent from here to the left edge */
+  --vl-grad-solid: 41%;     /* #0e1822 is solid from the right edge to here… */
+  --vl-grad-clear: 92%;     /* …and fully transparent from here to the left edge */
+  --vl-map-w: 70%;          /* the map image covers this much of the card, from the left */
   --vl-map-x: 50%; --vl-map-y: 50%; /* which part of the map image shows */
-  --vl-map-bright: 1;       /* map image brightness */
-  --vl-text-w: 50%;         /* width of the text column on the right, over the map */
-  --vl-word-h: 12px;        /* VALORANT wordmark height */
-  --vl-mark-h: 22px;        /* V mark height (not running / no map) */
+  --vl-map-bright: 0.95;    /* map image brightness */
+  --vl-text-w: 42%;         /* width of the text column on the right, over the map */
+  --vl-word-h: 10px;        /* VALORANT wordmark height */
+  --vl-tile: 48px;          /* the square behind the V mark */
+  --vl-mark-h: 29px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
 }
 .vl-box { --vl-top-cur: var(--vl-top-h); }
@@ -1409,12 +1411,14 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 .vl-match { position: relative; overflow: hidden; flex: none; height: var(--vl-top-cur); display: flex; align-items: center; gap: 12px;
   padding: 10px 16px; border-radius: 14px; background: #0e1822; border: 1px solid var(--vl-line); text-align: left; }
 .vl-match.live { border-color: rgba(255, 70, 85, .55); }
-.vl-map-bg { position: absolute; inset: 0; background: no-repeat var(--vl-map-x) var(--vl-map-y) / cover; filter: brightness(var(--vl-map-bright)); }
+.vl-map-bg { position: absolute; top: 0; bottom: 0; left: 0; width: var(--vl-map-w); background: no-repeat var(--vl-map-x) var(--vl-map-y) / cover; filter: brightness(var(--vl-map-bright)); }
 .vl-shade { position: absolute; inset: 0; background: linear-gradient(to left, #0e1822 var(--vl-grad-solid), rgba(14, 24, 34, 0) var(--vl-grad-clear)); }
 .vl-match:not(.has-map) .vl-map-bg, .vl-match:not(.has-map) .vl-shade { display: none; }
-.vl-mark { position: relative; flex: none; display: inline-flex; color: var(--vl-red); }
-.vl-mark svg { height: var(--vl-mark-h); width: auto; display: block; }
-.vl-match.has-map .vl-mark { display: none; }
+.vl-tile { position: relative; flex: none; width: var(--vl-tile); height: var(--vl-tile); border-radius: 10px; background: var(--vl-panel-2);
+  display: grid; place-items: center; color: var(--vl-red); }
+.vl-match.has-map .vl-tile { background: rgba(14, 24, 34, .82); }
+.vl-mark { display: inline-flex; }
+.vl-mark svg { height: min(var(--vl-mark-h), calc(var(--vl-tile) - 8px)); width: auto; display: block; }
 .vl-mtext { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .vl-match.has-map .vl-mtext { flex: none; width: var(--vl-text-w); margin-left: auto; }
 .vl-brand { display: inline-flex; color: var(--vl-red); }
