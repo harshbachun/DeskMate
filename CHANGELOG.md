@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (2026-11-26)
+
+- VALORANT match card: map image background, new logo, red border in a match
+- VALORANT page stays open while the game runs
+
 ## 1.0.0 (2026-11-26)
 
 First release of Deskmate, based on PhoneBox 0.9.24.
