@@ -1403,18 +1403,26 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
   --vl-text-w: 42%;         /* width of the text column on the right, over the map */
   --vl-word-h: 10px;        /* VALORANT wordmark height */
   --vl-tile: 87px;          /* the square behind the V mark */
+  --vl-tile-x: 0px;         /* moves the square right (or left, negative) */
   --vl-mark-h: 45px;        /* V mark height, inside the square */
   --vl-m1-size: 20px; --vl-m2-size: 15px;
   /* not running: its own sizes */
   --vl-off-tile: 69px;      /* the V square */
+  --vl-off-tile-x: 0px;     /* moves it sideways */
   --vl-off-mark-h: 36px;    /* the V inside it */
   --vl-off-word-h: 10px;    /* VALORANT wordmark */
   --vl-off-text: 15px;      /* "Not running" */
   --vl-off-gap: 12px;       /* space between the square, the wordmark and the text */
   --vl-off-pad: 14px;       /* inner left/right padding */
+  /* in lobby (running, no map yet): its own sizes */
+  --vl-lobby-h: 130px;      /* card height */
+  --vl-lobby-tile: 87px; --vl-lobby-tile-x: 0px; --vl-lobby-mark-h: 45px;
+  --vl-lobby-word-h: 10px; --vl-lobby-m1: 20px; --vl-lobby-m2: 15px;
+  --vl-lobby-gap: 12px;     /* space between the square and the text */
 }
 .vl-box { --vl-top-cur: var(--vl-top-h); }
 .vl-box.vl-off { --vl-top-cur: var(--vl-top-off-h); }
+.vl-box.vl-lobby { --vl-top-cur: var(--vl-lobby-h); }
 .vl-match { position: relative; overflow: hidden; flex: none; height: var(--vl-top-cur); display: flex; align-items: center; gap: 12px;
   padding: 10px 16px; border-radius: 14px; background: #0e1822; border: 1px solid var(--vl-line); text-align: left; }
 .vl-match.live { border-color: rgba(255, 70, 85, .55); }
@@ -1422,7 +1430,7 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 .vl-shade { position: absolute; inset: 0; background: linear-gradient(to left, #0e1822 var(--vl-grad-solid), rgba(14, 24, 34, 0) var(--vl-grad-clear)); }
 .vl-match:not(.has-map) .vl-map-bg, .vl-match:not(.has-map) .vl-shade { display: none; }
 .vl-tile { position: relative; flex: none; width: var(--vl-tile); height: var(--vl-tile); border-radius: 10px; background: var(--vl-panel-2);
-  display: grid; place-items: center; color: var(--vl-red); }
+  display: grid; place-items: center; color: var(--vl-red); margin-left: var(--vl-tile-x); }
 .vl-match.has-map .vl-tile { background: rgba(14, 24, 34, .82); }
 .vl-mark { display: inline-flex; }
 .vl-mark svg { height: min(var(--vl-mark-h), calc(var(--vl-tile) - 8px)); width: auto; display: block; }
@@ -1439,11 +1447,18 @@ body.controls-top .ap-foot { order: -1; margin-bottom: 4px; }
 .vl-time { color: #65bd82; font-weight: 700; }
 /* not running: one compact line, [V] VALORANT  Not running */
 .vl-match.off { padding: 0 var(--vl-off-pad); gap: var(--vl-off-gap); opacity: .8; }
-.vl-match.off .vl-tile { width: var(--vl-off-tile); height: var(--vl-off-tile); }
+.vl-match.off .vl-tile { width: var(--vl-off-tile); height: var(--vl-off-tile); margin-left: var(--vl-off-tile-x); }
 .vl-match.off .vl-mark svg { height: min(var(--vl-off-mark-h), calc(var(--vl-off-tile) - 8px)); }
 .vl-match.off .vl-brand svg { height: var(--vl-off-word-h); }
 .vl-match.off .vl-mtext { flex-direction: row; align-items: center; gap: var(--vl-off-gap); }
 .vl-match.off .vl-m1 { font-size: var(--vl-off-text); font-weight: 600; color: var(--vl-muted); }
+/* in lobby: running, no map yet */
+.vl-match.lobby { gap: var(--vl-lobby-gap); }
+.vl-match.lobby .vl-tile { width: var(--vl-lobby-tile); height: var(--vl-lobby-tile); margin-left: var(--vl-lobby-tile-x); }
+.vl-match.lobby .vl-mark svg { height: min(var(--vl-lobby-mark-h), calc(var(--vl-lobby-tile) - 8px)); }
+.vl-match.lobby .vl-brand svg { height: var(--vl-lobby-word-h); }
+.vl-match.lobby .vl-m1 { font-size: var(--vl-lobby-m1); }
+.vl-match.lobby .vl-m2 { font-size: var(--vl-lobby-m2); }
 .vl-match.off .vl-m2, .vl-match.off .vl-activity { display: none; }
 
 /* 2 · controls fill the rest of the first screen; Talk is the biggest and sits by the right thumb */

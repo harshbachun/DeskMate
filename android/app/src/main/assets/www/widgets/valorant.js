@@ -256,6 +256,8 @@ W.valorant = {
       const off = loaded && !g?.running;
       box.classList.toggle('vl-off', off);
       const mapName = !off && p?.map && p.mapImage ? p.map : null;
+      const lobby = loaded && !off && !mapName; // running, no map yet: the lobby layout
+      box.classList.toggle('vl-lobby', lobby);
       if (mapName !== shownMap) { shownMap = mapName; mapBg.style.backgroundImage = mapName ? `url("${mapUrl(mapName)}")` : ''; }
       if (!loaded) { match.className = 'vl-match'; mLine1.textContent = failed ? 'PC not answering' : 'Connecting…'; mLine2.textContent = ''; return; }
       if (off) { // compact: logo, wordmark, one word
@@ -264,7 +266,7 @@ W.valorant = {
         mLine2.textContent = '';
         return;
       }
-      match.className = 'vl-match' + (mapName ? ' has-map' : '') + (p?.loop === 'INGAME' ? ' live' : '');
+      match.className = 'vl-match' + (mapName ? ' has-map' : ' lobby') + (p?.loop === 'INGAME' ? ' live' : '');
       if (!p) {
         mLine1.textContent = 'In VALORANT';
         mLine2.textContent = data.presenceError || 'Waiting for the Riot Client';
