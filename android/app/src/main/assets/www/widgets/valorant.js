@@ -103,7 +103,7 @@ W.valorant = {
 
     // ---- 2. controls --------------------------------------------------------------------------------------------
     const clipLabel = h('b', null, 'Save clip'), clipSub = h('small', null, '');
-    const clipBtn = labelled(h('button', 'vl-btn vl-clip', SVG(ICON.clip), clipLabel, clipSub), 'Save clip: press your clip app's hotkey');
+    const clipBtn = labelled(h('button', 'vl-btn vl-clip', SVG(ICON.clip), clipLabel, clipSub), "Save clip: press your clip app's hotkey");
     const talkLabel = h('b', null, 'Hold to talk'), talkSub = h('small', null, '');
     const talkBtn = labelled(h('button', 'vl-btn vl-talk', SVG(ICON.talk), talkLabel, talkSub), 'Hold to talk in team voice');
     const muteIcon = h('span', 'vl-mute-icon', SVG(ICON.mic));
