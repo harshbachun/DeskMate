@@ -1,8 +1,8 @@
 <div align="center">
 
-# DeskMate
+<img src="docs/images/site-banner.svg" alt="DeskMate: turn an old Android phone into a desk panel for your Windows PC" width="100%">
 
-**Turn an old Android phone into a desk panel for your Windows PC.**
+<br>
 
 [![Latest release](docs/images/badge-release.svg)](https://github.com/harshbachun/Deskmate/releases/latest)
 ![Windows 10/11](docs/images/badge-pc.svg)
@@ -11,21 +11,28 @@
 
 <a href="https://github.com/harshbachun/Deskmate/releases/latest/download/DeskmateAgent.exe"><img alt="Download DeskmateAgent.exe" src="docs/images/download-button.svg"></a>
 
+<br>
+
 <img src="docs/images/hero.png" alt="DeskMate's VALORANT page on a phone: live match on Icebox, mic, save-clip and hold-to-talk buttons, and GPU stats" width="820">
 
 </div>
 
-## What it does
+<br>
 
-- **Live PC stats:** `CPU`, `GPU`, `RAM`, network, temperatures and the processes using the most.
-- **AI usage limits:** your `Claude` and `Codex` quotas as bars, with reset times.
-- **Discord voice:** mute, deafen and hang up, see who's talking, jump between your favourite servers.
-- **VALORANT page:** opens by itself when the game starts. Shows the match, has buttons to save a clip and hold to talk, and lists your stats.
-- **Media and shortcuts:** control any music player, and launch apps or lock the PC with one tap.
+<h2 align="center">Features</h2>
+<p align="center">Everything your PC is doing, on a screen that sits next to your keyboard.</p>
 
-The phone connects over **USB or Wi-Fi**. You only download **one file**: the PC app has the phone app, the USB tool and the temperature driver built in.
+<img src="docs/images/site-features.svg" alt="Live PC stats: CPU, GPU, RAM, network and temperatures. AI usage limits: Claude and Codex quotas with reset times. Discord voice: mute, deafen, hang up, see who's talking. VALORANT page: opens when the game starts, with save clip and hold to talk. Media and shortcuts: control music, launch apps, lock the PC. One download: the phone app, USB tool and temperature driver are built in." width="100%">
 
-## Install in 3 steps
+<br>
+
+<h2 align="center">Install</h2>
+<p align="center">Three steps, about two minutes. No other installs.</p>
+
+<img src="docs/images/site-steps.svg" alt="Step 1: download and open DeskmateAgent.exe. Step 2: turn on USB debugging on the phone. Step 3: plug the phone in and allow USB debugging." width="100%">
+
+<details>
+<summary><b>Step by step</b></summary>
 
 1. **Download and open [DeskmateAgent.exe](https://github.com/harshbachun/Deskmate/releases/latest/download/DeskmateAgent.exe).**
    It installs itself, starts with Windows, and puts an icon in the system tray.
@@ -35,8 +42,12 @@ The phone connects over **USB or Wi-Fi**. You only download **one file**: the PC
    Accept *Allow USB debugging?* on the phone (tick *Always allow*). DeskMate installs the phone app and opens the panel.
 
 To change the layout, pages, shortcuts and more, double-click the tray icon. It opens the settings page at http://127.0.0.1:8765.
+</details>
 
-## Pages
+<br>
+
+<h2 align="center">Pages</h2>
+<p align="center">Swipe between them on the phone, or pick which ones you want in the settings.</p>
 
 | | |
 |:---:|:---:|
@@ -46,14 +57,22 @@ To change the layout, pages, shortcuts and more, double-click the tray icon. It 
 | <img src="docs/images/valorant.png" alt="VALORANT page"><br>**VALORANT**: live match, mic, save clip, hold to talk, `GPU` stats | <img src="docs/images/music.png" alt="Music page"><br>**Music**: big player controls for whatever is playing |
 | <img src="docs/images/sessions.png" alt="Sessions page"><br>**Sessions**: your `Claude Code` and `Codex` sessions, and GitHub | |
 
-*The VALORANT, Shortcuts and Music screenshots are from a real PC; the others use made-up data.*
+<p align="center"><sub>The VALORANT, Shortcuts and Music screenshots are from a real PC; the others use made-up data.</sub></p>
 
-## Requirements
+<br>
 
-- **PC:** `Windows 10/11` (`64-bit`).
-- **Phone:** any Android phone or tablet with `Android 5.0` or later, and a USB cable. After setup you can use Wi-Fi instead.
+<h2 align="center">Requirements</h2>
 
-## FAQ
+<table align="center">
+<tr>
+<td align="center" width="50%"><h3>PC</h3><code>Windows 10/11</code> · <code>64-bit</code><br><sub>Nothing else to install</sub></td>
+<td align="center" width="50%"><h3>Phone</h3><code>Android 5.0</code> or later<br><sub>Any phone or tablet, plus a USB cable. Wi-Fi works after setup.</sub></td>
+</tr>
+</table>
+
+<br>
+
+<h2 align="center">FAQ</h2>
 
 <details>
 <summary><b>Windows says "Windows protected your PC"</b></summary>
@@ -110,6 +129,10 @@ Download the new DeskmateAgent.exe and open it. Your settings are kept. The next
 No. DeskMate has no account and no server of its own: the phone talks only to your PC. A few optional widgets fetch public data, such as the weather. See [PRIVACY.md](PRIVACY.md).
 </details>
 
-## Credits
+<br>
 
-DeskMate is based on [PhoneBox](https://github.com/ersinkoc/phonebox) by Ersin Koç (MIT, see [LICENSE](LICENSE)). The third-party parts are listed in [THIRD-PARTY-NOTICES.txt](agent/Deskmate.Agent/THIRD-PARTY-NOTICES.txt). Want to build it yourself? See [BUILDING.md](BUILDING.md).
+---
+
+<p align="center">
+<sub>DeskMate is based on <a href="https://github.com/ersinkoc/phonebox">PhoneBox</a> by Ersin Koç · <a href="LICENSE">MIT license</a> · <a href="agent/Deskmate.Agent/THIRD-PARTY-NOTICES.txt">Third-party notices</a> · <a href="BUILDING.md">Build it yourself</a></sub>
+</p>

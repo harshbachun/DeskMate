@@ -21,6 +21,8 @@ RELEASE = 'v1.0.2'
 LABEL_BG = '#555'
 LABEL_FONT = 'Verdana, Geneva, "DejaVu Sans", sans-serif'
 MONO_ADVANCE = 0.6  # JetBrains Mono: every glyph is 600/1000 em wide
+DOWNLOAD_ICON = ('M12,16L7,11L8.4,9.55l2.6,2.6V4h2v8.15l2.6-2.6L17,11l-5,5ZM6,20q-0.82,0-1.41-0.59T4,18V15H6v3H18V15h2v3'
+                 'q0,0.82-0.59,1.41T18,20H6Z')
 R = 10.5            # corner radius, the same on every button
 
 # Sizes: font px, face height, inner padding, outer padding (extra room past the rounded corner)
@@ -80,12 +82,10 @@ def make(label, value, color, base, size, icon, label_w, font_b64, delay=0.0):
     H = y + h + 1
     ty = round(y + h / 2 + f * 0.36, 1)
     arrow = ''
-    if icon:
-        cx, s = 1 + outer + f / 2 - 1, f / 15
-        top, tip = y + h / 2 - 7 * s, y + h / 2 + 3.5 * s
-        arrow = (f'\n    <path d="M{cx:.1f} {top:.1f}V{tip:.1f}m-{4.5*s:.1f}-{4.5*s:.1f}l{4.5*s:.1f} {4.5*s:.1f} {4.5*s:.1f}-{4.5*s:.1f}'
-                 f'M{cx-6*s:.1f} {tip+4*s:.1f}h{12*s:.1f}" fill="none" stroke="#fff" stroke-width="{2.2*s:.1f}" '
-                 f'stroke-linecap="round" stroke-linejoin="round"/>')
+    if icon:  # Material Symbols "download" (Apache 2.0), 24x24, drawn white
+        k = (f + 5) / 24
+        ix, iy = 1 + outer - 2, y + (h - 24 * k) / 2
+        arrow = (f'\n    <path d="{DOWNLOAD_ICON}" transform="translate({ix:.2f} {iy:.2f}) scale({k:.4f})" fill="#fff"/>')
     lx = 1 + outer + icon_w + label_w / 2
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="{label} {value}">
   <title>{label} {value}</title>
