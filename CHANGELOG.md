@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2 (2026-11-27)
+
+- VALORANT page built in; turn it off in your pages if you don't play
+- Save clip works with any clip app (Xbox Game Bar, Medal, NVIDIA, AMD, OBS, custom, off)
+- USB reconnects by itself when adb hangs
+- Numbers in JetBrains Mono
+- New rounded app icon
+
 ## 1.0.1 (2026-11-26)
 
 - VALORANT match card: map image background, new logo, red border in a match

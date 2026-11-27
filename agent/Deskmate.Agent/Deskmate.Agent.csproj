@@ -11,7 +11,7 @@
     <Product>Deskmate</Product>
     <Company>Deskmate</Company>
     <Description>Deskmate desktop agent: feeds the Deskmate Android desk panel over USB or Wi-Fi.</Description>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
