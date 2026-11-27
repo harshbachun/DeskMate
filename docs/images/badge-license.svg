@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="37" viewBox="0 0 120 37" role="img" aria-label="license MIT">
+  <title>license MIT</title>
+  <!-- 3D button for the README, made by tools/make_badges.py. JetBrains Mono subset: SIL Open Font License 1.1, (c) The JetBrains Mono Project Authors -->
+  <style>
+    @font-face { font-family: "JBM"; font-weight: 700; src: url(data:font/woff;base64,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) format("woff"); }
+    .top { transform: translateY(-2.6px); transition: transform .1s ease;
+            animation: press 5s ease-in-out 0.9s infinite; }
+    @keyframes press { 0%, 72% { transform: translateY(-2.6px); } 80%, 86% { transform: translateY(-4.3px); }
+                        89% { transform: translateY(0); } 94%, 100% { transform: translateY(-2.6px); } }
+    @media (prefers-reduced-motion: reduce) { .top { animation: none; } }
+    svg:hover .top { animation: none; transform: translateY(-4.3px); }
+    svg:active .top { animation: none; transform: translateY(0); }
+    svg { cursor: pointer; }
+    text { font-size: 13px; font-weight: bold; fill: #fff; }
+    .l { font-family: Verdana, Geneva, "DejaVu Sans", sans-serif; }
+    .v { font-family: "JBM", "JetBrains Mono", Consolas, monospace; }
+  </style>
+  <defs><clipPath id="face"><rect x="1" y="6" width="118" height="30" rx="10.5"/></clipPath></defs>
+  <rect x="1" y="6" width="118" height="30" rx="10.5" fill="#3f3f46"/>
+  <g class="top">
+    <g clip-path="url(#face)">
+      <rect x="1" y="6" width="73" height="30" fill="#555"/>
+      <rect x="74" y="6" width="45" height="30" fill="#9f9f9f"/>
+    </g>
+    <rect x="2" y="7" width="116" height="28" rx="9.5" fill="none" stroke="#3f3f46" stroke-width="2"/>
+    <text class="l" x="39.4" y="25.7" text-anchor="middle">license</text>
+    <text class="v" x="96.5" y="25.7" text-anchor="middle" textLength="23.4">MIT</text>
+  </g>
+</svg>

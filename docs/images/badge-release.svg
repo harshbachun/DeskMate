@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="146" height="37" viewBox="0 0 146 37" role="img" aria-label="release v1.0.2">
+  <title>release v1.0.2</title>
+  <!-- 3D button for the README, made by tools/make_badges.py. JetBrains Mono subset: SIL Open Font License 1.1, (c) The JetBrains Mono Project Authors -->
+  <style>
+    @font-face { font-family: "JBM"; font-weight: 700; src: url(data:font/woff;base64,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) format("woff"); }
+    .top { transform: translateY(-2.6px); transition: transform .1s ease;
+            animation: press 5s ease-in-out 0.0s infinite; }
+    @keyframes press { 0%, 72% { transform: translateY(-2.6px); } 80%, 86% { transform: translateY(-4.3px); }
+                        89% { transform: translateY(0); } 94%, 100% { transform: translateY(-2.6px); } }
+    @media (prefers-reduced-motion: reduce) { .top { animation: none; } }
+    svg:hover .top { animation: none; transform: translateY(-4.3px); }
+    svg:active .top { animation: none; transform: translateY(0); }
+    svg { cursor: pointer; }
+    text { font-size: 13px; font-weight: bold; fill: #fff; }
+    .l { font-family: Verdana, Geneva, "DejaVu Sans", sans-serif; }
+    .v { font-family: "JBM", "JetBrains Mono", Consolas, monospace; }
+  </style>
+  <defs><clipPath id="face"><rect x="1" y="6" width="144" height="30" rx="10.5"/></clipPath></defs>
+  <rect x="1" y="6" width="144" height="30" rx="10.5" fill="#14532d"/>
+  <g class="top">
+    <g clip-path="url(#face)">
+      <rect x="1" y="6" width="75" height="30" fill="#555"/>
+      <rect x="76" y="6" width="69" height="30" fill="#22c55e"/>
+    </g>
+    <rect x="2" y="7" width="142" height="28" rx="9.5" fill="none" stroke="#14532d" stroke-width="2"/>
+    <text class="l" x="40.6" y="25.7" text-anchor="middle">release</text>
+    <text class="v" x="110.5" y="25.7" text-anchor="middle" textLength="46.8">v1.0.2</text>
+  </g>
+</svg>

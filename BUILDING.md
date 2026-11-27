@@ -22,4 +22,5 @@ $env:JAVA_HOME = '<path to JDK 17>'; $env:ANDROID_HOME = "$env:LOCALAPPDATA\Andr
 
 1. Raise the version: `Version` in `agent/Deskmate.Agent/Deskmate.Agent.csproj`, and `versionName` and `versionCode` in `android/app/build.gradle.kts`.
 2. Run `build-release.ps1`.
-3. Create a GitHub release and attach `dist\DeskmateAgent.exe`, the APK and `THIRD-PARTY-NOTICES.txt`.
+3. Set `RELEASE` in `tools/make_badges.py` and run `python tools/make_badges.py`, so the README's release button shows the new version.
+4. Create a GitHub release and attach `dist\DeskmateAgent.exe`, the APK and `THIRD-PARTY-NOTICES.txt`.
