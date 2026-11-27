@@ -53,3 +53,4 @@ tools/ui-tests/test-results/
 # Release build: downloaded third-party binaries and outputs (build-release.ps1)
 agent/Deskmate.Agent/bundle/
 agent/publish/
+!agent/Deskmate.Agent/THIRD-PARTY-NOTICES.txt
